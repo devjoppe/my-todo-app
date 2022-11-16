@@ -52,19 +52,29 @@ select {
 }
 
 .check {
-    background: white;
+    background: config.$color-pink;
     width: 32px;
     height: 32px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    color: gray;
+    color: config.$color-green;
     cursor: pointer;
+    margin-right: 16px;
+    &:hover {
+        background: config.$color-green;
+        color: config.$color-pink;
+    }
 }
 
 .trash {
     cursor: pointer;
+}
+
+.itemcontent {
+    display: flex;
+    align-items: center;
 }
 
 .category {
