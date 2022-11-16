@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My todo | Joakim Ottosson</title>
+
+    <link rel="stylesheet" href="style/css/style.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
+</head>
+<body>
+    
+    <div class="container-center">
+        <div class="todo-app">
+            <div class="inner-content">
+                <h1>Joakims todo &#x1F4C3;</h1>
+                <form id="search">
+                    <input class="search" type="text" name="searchfield" placeholder="Search">
+                </form>
+                <h2>Upcoming tasks</h2>
+                <div id="todolist" class="todolist">
+                    <div class="listitem ongoing">
+                        <div class="check">
+                            <span class="material-symbols-outlined">done</span>
+                        </div>
+                        <span>Rule the word</span>
+                        <div class="misc">
+                            <span class="category private">Private</span>
+                            <span class="material-symbols-outlined trash">delete</span>
+                        </div>
+                    </div>
+                    <div class="listitem ongoing">
+                        <span>I will print a larger task here!</span>
+                        <div class="misc">
+                            <span class="category work">Work</span>
+                            <span class="material-symbols-outlined trash">delete</span>
+                        </div>
+                    </div>
+                    <div class="listitem ongoing">
+                        <span>Rule the word</span>
+                        <span class="material-symbols-outlined trash">delete</span>
+                    </div>
+                </div>
+                <form id="addtodo">
+                    <div class="addnewtask">
+                        <select class="addcategory" id="category" name="taskcategory">
+                            <option value="None">None</option>
+                            <option value="Private">Private</option>
+                            <option value="Work">Work</option>
+                        </select>
+                        <input class="addtask" type="text" name="addfield" placeholder="Add new task">
+                    </div>
+                </form>
+                <h2>Completed &#x1F44D;</h2>
+                <div id="completedlist" class="completedlist">
+                    <div class="listitem completed">
+                        <span>Putting some text here</span>
+                        <div class="misc">
+                            <span class="category work">Work</span>
+                            <span class="material-symbols-outlined trash">delete</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

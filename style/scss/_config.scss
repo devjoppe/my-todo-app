@@ -1,0 +1,89 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700;900&display=swap');
+
+$primary-font: 'Titillium Web', sans-serif;
+
+// Colors
+$color-pink: #FF577F;
+$color-orange: #FF884B;
+$color-light-orange: #FFD384;
+$color-yellow: #FFF9B0;
+$color-dark: rgb(32, 32, 32);
+$color-dark-80: rgb(58, 58, 58);
+$color-green: #b0ffba;
+
+body {
+    padding: 0;
+    margin: 0;
+    background: $color-light-orange;
+    font-family: 'Titillium Web', sans-serif;
+}
+
+h1, h2, h3 {
+    padding: 0;
+    margin: 0;
+    font-weight: 900;
+    color: $color-dark;
+}
+
+h1 {
+    margin-bottom: 16px;
+}
+
+h2 {
+    color: $color-pink;
+    margin-bottom: 8px;
+}
+
+// Main divs
+.container-center {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.todo-app {
+    display: flex;
+    box-sizing: border-box;
+    padding: 48px;
+    background: white;
+    border-radius: 15px;
+    //max-width: 540px;
+    min-height: 480px;
+    min-width: 540px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.inner-content {
+    width: 100%;
+}
+
+.ongoing {
+    background: $color-pink;
+    color: white;
+}
+
+.completed {
+    background: $color-green;
+    span {
+        text-decoration: line-through;
+    }
+}
+
+.private {
+    color: $color-pink;
+}
+
+.work {
+    color: $color-dark-80;
+}
+
+.none {
+    color: #b4b4b4;
+}
+
+.material-symbols-outlined {
+    text-decoration: none !important;
+}
