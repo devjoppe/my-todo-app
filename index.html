@@ -19,65 +19,27 @@
                 <form id="search">
                     <input class="search" type="text" name="searchfield" placeholder="Search">
                 </form>
-                <h2>Upcoming tasks</h2>
+                <h2>Upcoming tasks this week</h2>
                 <div id="todolist" class="todolist">
-                    <div class="listitem ongoing">
-                        <div class="itemcontent">
-                            <div class="check">
-                                <span class="material-symbols-outlined">done</span>
-                            </div>
-                            <span>Rule the word</span>
-                        </div>
-                        <div class="misc">
-                            <span class="category private">Private</span>
-                            <span class="material-symbols-outlined trash">delete</span>
-                        </div>
-                    </div>
-                    <div class="listitem ongoing">
-                        <div class="itemcontent">
-                            <div class="check">
-                                <span class="material-symbols-outlined">done</span>
-                            </div>
-                            <span>Rule the word</span>
-                        </div>
-                        <div class="misc">
-                            <span class="category work">Work</span>
-                            <span class="material-symbols-outlined trash">delete</span>
-                        </div>
-                    </div>
-                    <div class="listitem ongoing">
-                        <div class="itemcontent">
-                            <div class="check">
-                                <span class="material-symbols-outlined">done</span>
-                            </div>
-                            <span>Look at me mom! I am a programmer</span>
-                        </div>
-                        <span class="material-symbols-outlined trash">delete</span>
-                    </div>
-                </div>
+                    <!-- List with ongoing tasks -->
+                </div> 
                 <form id="addtodo">
                     <div class="addnewtask">
                         <select class="addcategory" id="category" name="taskcategory">
-                            <option value="None">None</option>
-                            <option value="Private">Private</option>
-                            <option value="Work">Work</option>
+                            <option value="none">None</option>
+                            <option value="private">Private</option>
+                            <option value="work">Work</option>
                         </select>
                         <input class="addtask" type="text" name="addfield" placeholder="Add new task">
                     </div>
                 </form>
                 <h2>Completed &#x1F44D;</h2>
                 <div id="completedlist" class="completedlist">
-                    <div class="listitem completed">
-                        <span>Putting some text here</span>
-                        <div class="misc">
-                            <span class="category work">Work</span>
-                            <span class="material-symbols-outlined trash">delete</span>
-                        </div>
-                    </div>
+                    <!-- List with completed -->
                 </div>
             </div>
         </div>
     </div>
-
+    <script src="js/todos-jo-03.js"></script>
 </body>
 </html>

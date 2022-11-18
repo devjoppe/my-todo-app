@@ -50,9 +50,7 @@ h2 {
     padding: 48px;
     background: white;
     border-radius: 15px;
-    //max-width: 540px;
-    min-height: 480px;
-    min-width: 540px;
+    min-width: 640px;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
@@ -86,4 +84,8 @@ h2 {
 
 .material-symbols-outlined {
     text-decoration: none !important;
+}
+
+.hide {
+    display: none !important;
 }
