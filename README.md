@@ -7,4 +7,4 @@ A learning project to get more knowledge about:
 * Dataset
 * and a filter function (that kinda work)
 
-![](./images/screenshot-todo-app.png.png)
+![](./images/screenshot-todo-app.png)
