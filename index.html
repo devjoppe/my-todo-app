@@ -17,7 +17,8 @@
             <div class="inner-content">
                 <h1>Joakims todo &#x1F4C3;</h1>
                 <form id="search">
-                    <input class="search" type="text" name="searchfield" placeholder="Search">
+                    <label for="search-field"></label>
+                    <input id="search-field" class="search" type="text" name="searchfield" placeholder="Search">
                 </form>
                 <h2>Upcoming tasks this week</h2>
                 <div id="todolist" class="todolist">
@@ -25,12 +26,14 @@
                 </div> 
                 <form id="addtodo">
                     <div class="addnewtask">
+                        <label for="category"></label>
                         <select class="addcategory" id="category" name="taskcategory">
                             <option value="none">None</option>
                             <option value="private">Private</option>
                             <option value="work">Work</option>
                         </select>
-                        <input class="addtask" type="text" name="addfield" placeholder="Add new task">
+                        <label for="addtask"></label>
+                        <input id="addtask" class="addtask" type="text" name="addfield" placeholder="Add new task">
                     </div>
                 </form>
                 <h2>Completed &#x1F44D;</h2>
@@ -40,6 +43,7 @@
             </div>
         </div>
     </div>
+    <script src="js/todo-list.js"></script>
     <script src="js/todos-jo-03.js"></script>
 </body>
 </html>
