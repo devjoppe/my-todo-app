@@ -1,49 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My todo | Joakim Ottosson</title>
-
-    <link rel="stylesheet" href="style/css/style.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-
-</head>
-<body>
-    
-    <div class="container-center">
-        <div class="todo-app">
-            <div class="inner-content">
-                <h1>Joakims todo &#x1F4C3;</h1>
-                <form id="search">
-                    <label for="search-field"></label>
-                    <input id="search-field" class="search" type="text" name="searchfield" placeholder="Search">
-                </form>
-                <h2>Upcoming tasks this week</h2>
-                <div id="todolist" class="todolist">
-                    <!-- List with ongoing tasks -->
-                </div> 
-                <form id="addtodo">
-                    <div class="addnewtask">
-                        <label for="category"></label>
-                        <select class="addcategory" id="category" name="taskcategory">
-                            <option value="none">None</option>
-                            <option value="private">Private</option>
-                            <option value="work">Work</option>
-                        </select>
-                        <label for="addtask"></label>
-                        <input id="addtask" class="addtask" type="text" name="addfield" placeholder="Add new task">
-                    </div>
-                </form>
-                <h2>Completed &#x1F44D;</h2>
-                <div id="completedlist" class="completedlist">
-                    <!-- List with completed -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="js/todo-list.js"></script>
-    <script src="js/todos-jo-03.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
