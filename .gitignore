@@ -26,3 +26,4 @@ prepros.config
 *.sw?
 
 .env
+src/assets/script/api/getapi.ts
