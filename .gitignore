@@ -24,3 +24,5 @@ prepros.config
 *.njsproj
 *.sln
 *.sw?
+
+.env

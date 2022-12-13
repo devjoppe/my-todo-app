@@ -70,12 +70,13 @@ h2 {
     }
 }
 
-.private {
-    color: $color-pink;
+// Category
+.Private {
+    color: $color-pink !important;
 }
 
-.work {
-    color: $color-dark-80;
+.Work {
+    color: $color-dark-80 !important;
 }
 
 .none {
