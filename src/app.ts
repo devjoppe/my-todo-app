@@ -11,7 +11,8 @@ import {
     onSnapshot,
     query,
     orderBy,
-    serverTimestamp
+    serverTimestamp,
+    updateDoc
     } from 'firebase/firestore'
 
 // API Config
@@ -53,15 +54,19 @@ onSnapshot(q, (snapshot) => {
     })
     console.log(todos)
     renderTodos()
+    completedRender()
 })
 
-// Render
+const todoList = document.querySelector('#todolist')!
+const completedList = document.querySelector('#completedlist')!
+
+// Render todos
 const renderTodos = () => {
-    document.querySelector('#todolist')!.innerHTML = todos.filter(item => !item.completed).map(item => {
+    todoList.innerHTML = todos.filter(item => !item.completed).map(item => {
         return `<div class="listitem ongoing" data-title="${item.todo}">
             <div class="itemcontent">
                 <div class="check">
-                    <span class="material-symbols-outlined" data-done="${item.todo}">done</span>
+                    <span class="material-symbols-outlined" data-done="${item.id}">done</span>
                 </div>
                 <span class="itemtitle">${item.todo}</span>
             </div>
@@ -70,7 +75,20 @@ const renderTodos = () => {
                 <span class="material-symbols-outlined trash" data-delete="${item.id}">delete</span>
             </div>
         </div>`
-    }).join('')
+    }).join("")
+}
+
+// Render completed
+const completedRender = () => {
+    completedList.innerHTML = todos.filter(item => item.completed).map(item => `
+        <div class="listitem completed" data-title="${item.todo}">
+            <span>${item.todo}</span>
+            <div class="misc">
+                <span class="category ${item.category}">${item.category}</span>
+                <span class="material-symbols-outlined trash" data-delete="${item.id}">delete</span>
+            </div>
+        </div>
+    `).join("")
 }
 
 // Add
@@ -88,4 +106,17 @@ todoForm.addEventListener('submit', (e) => {
     })
 })
 
-// Delete
+// Deleted
+todoList.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement
+    if(target.dataset.delete) {
+        const docRef = doc(db, 'todos', target.dataset.delete)
+        deleteDoc(docRef)
+    }
+    if(target.dataset.done) {
+        let docRef = doc(db, 'todos', target.dataset.done)
+        updateDoc(docRef, {
+            completed: true
+        })
+    }
+})
