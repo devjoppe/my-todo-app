@@ -44,6 +44,11 @@ a {
     }
 }
 
+p {
+    color: $color-dark;
+    margin-top: 0;
+}
+
 // Mixins
 @mixin box {
     box-sizing: border-box;
@@ -81,6 +86,7 @@ a {
     background: $color-yellow;
     width: 100%;
     padding: 16px 32px 16px 32px;
+    justify-content: center;
     & p {
         text-align: center;
         width: 100%;
