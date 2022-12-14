@@ -35,6 +35,16 @@ h2 {
     margin-bottom: 8px;
 }
 
+a {
+    text-decoration: none;
+    color: $color-pink;
+    font-weight: bold;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+
 // Main divs
 .container-center {
     display: flex;
@@ -44,14 +54,14 @@ h2 {
     align-items: center;
 }
 
-.todo-app {
+.todo-app, .user-app {
     display: flex;
     box-sizing: border-box;
     padding: 48px;
     background: white;
     border-radius: 15px;
     min-width: 640px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
 }
 
 .inner-content {
@@ -83,10 +93,15 @@ h2 {
     color: #b4b4b4;
 }
 
+// Options
 .material-symbols-outlined {
     text-decoration: none !important;
 }
 
 .hide {
     display: none !important;
+}
+
+.f-direction-column {
+    flex-direction: column;
 }

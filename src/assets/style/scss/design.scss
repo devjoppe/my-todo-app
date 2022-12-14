@@ -1,5 +1,12 @@
 @use 'config';
 
+//User welcome
+.user-welcome {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
 //Search component
 input[type=text] { 
     font-family: config.$primary-font;

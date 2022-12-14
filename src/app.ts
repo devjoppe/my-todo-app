@@ -32,7 +32,8 @@ interface todosItem {
     completed: boolean,
     id: any,
     category: string,
-    created: any
+    created: any,
+    userid: string
 }
 
 // Query
@@ -49,7 +50,8 @@ onSnapshot(q, (snapshot) => {
             todo: item.data().todo,
             completed: item.data().completed,
             category: item.data().category,
-            created: serverTimestamp()
+            created: serverTimestamp(),
+            userid: item.data().userid
         })
     })
     console.log(todos)
@@ -60,6 +62,10 @@ onSnapshot(q, (snapshot) => {
 const todoList = document.querySelector('#todolist')!
 const completedList = document.querySelector('#completedlist')!
 const searchForm = document.querySelector('#search') as HTMLFormElement
+
+// Hide the container
+// Todo Delete this one after the test.
+document.querySelector('.todo-app')!.classList.add('hide')
 
 // Render todos
 const renderTodos = () => {
