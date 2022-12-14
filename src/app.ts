@@ -148,4 +148,10 @@ const filterTasks = (searchKey: string) => {
         }
     })
     const searchQuery = todos.filter((item) => item.todo.toLowerCase().trim().includes(searchKey))
+    searchQuery.forEach(item => {
+        const searchedItem = document.querySelector('[data-title="' + item.todo + '"]')!
+        if(!item.completed) {
+            searchedItem.classList.remove('hide')
+        }
+    })
 }
