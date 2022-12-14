@@ -106,7 +106,7 @@ todoForm.addEventListener('submit', (e) => {
     })
 })
 
-// Deleted
+// Delete from upcoming tasks
 todoList.addEventListener('click', (e) => {
     const target = e.target as HTMLElement
     if(target.dataset.delete) {
@@ -118,5 +118,14 @@ todoList.addEventListener('click', (e) => {
         updateDoc(docRef, {
             completed: true
         })
+    }
+})
+
+// Delete from completed tasks
+completedList.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement
+    if(target.dataset.delete) {
+        const docRef = doc(db, 'todos', target.dataset.delete)
+        deleteDoc(docRef)
     }
 })
