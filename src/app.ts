@@ -59,6 +59,7 @@ onSnapshot(q, (snapshot) => {
 
 const todoList = document.querySelector('#todolist')!
 const completedList = document.querySelector('#completedlist')!
+const searchForm = document.querySelector('#search') as HTMLFormElement
 
 // Render todos
 const renderTodos = () => {
@@ -129,3 +130,22 @@ completedList.addEventListener('click', (e) => {
         deleteDoc(docRef)
     }
 })
+
+// Search function
+searchForm.addEventListener('keyup', (e) => {
+    e.preventDefault()
+    const searchKey: string = searchForm.searchfield.value.toLowerCase().trim()
+    filterTasks(searchKey)
+})
+
+// Search tasks function
+const filterTasks = (searchKey: string) => {
+    console.log(searchKey)
+    const taskItem = document.querySelectorAll('.listitem')
+    taskItem.forEach(item => {
+        if(!item.classList.contains('completed')) {
+            item.classList.add('hide')
+        }
+    })
+    const searchQuery = todos.filter((item) => item.todo.toLowerCase().trim().includes(searchKey))
+}
