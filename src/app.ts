@@ -12,7 +12,9 @@ import {
     query,
     orderBy,
     serverTimestamp,
-    updateDoc
+    updateDoc,
+    // where,
+    getDocs
     } from 'firebase/firestore'
 
 // API Config
@@ -26,6 +28,7 @@ const db = getFirestore()
 
 // Select collection in Firebase
 const colRef = collection(db, 'todos')
+const userRef = collection(db, 'user')
 
 interface todosItem {
     todo: string,
@@ -36,10 +39,16 @@ interface todosItem {
     userid: string
 }
 
+interface userItem {
+    username: string
+}
+
 // Query
 const q = query(colRef, orderBy('created', 'desc'))
+const qu = query(userRef)
 
 let todos: todosItem []
+let users: userItem []
 
 // Fetch/update data from Firebase realtime
 onSnapshot(q, (snapshot) => {
@@ -54,18 +63,54 @@ onSnapshot(q, (snapshot) => {
             userid: item.data().userid
         })
     })
-    console.log(todos)
     renderTodos()
     completedRender()
+})
+
+onSnapshot(qu, (snapshot)=> {
+    users = []
+    snapshot.docs.forEach(item => {
+        users.push({
+            username: item.data().username
+        })
+    })
 })
 
 const todoList = document.querySelector('#todolist')!
 const completedList = document.querySelector('#completedlist')!
 const searchForm = document.querySelector('#search') as HTMLFormElement
+const userForm = document.querySelector('#user') as HTMLFormElement
 
 // Hide the container
 // Todo Delete this one after the test.
 document.querySelector('.todo-app')!.classList.add('hide')
+
+// Check user email to the database
+userForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const userMail: string = userForm.useremail.value
+    const getUser = query(userRef)
+    getDocs(getUser)
+        .then(userItem => {
+            userItem.docs.forEach(user => {
+                if (user.data().email === userMail) {
+                    existingUser()
+                } else {
+                    newUser()
+                }
+            })
+        })
+})
+
+// User exist
+const existingUser = () => {
+    console.log("Existing user")
+}
+
+// New user, save user data
+const newUser = () => {
+    console.log("New user")
+}
 
 // Render todos
 const renderTodos = () => {
@@ -85,7 +130,7 @@ const renderTodos = () => {
     }).join("")
 }
 
-// Render completed
+// Render todos completed
 const completedRender = () => {
     completedList.innerHTML = todos.filter(item => item.completed).map(item => `
         <div class="listitem completed" data-title="${item.todo}">
@@ -98,7 +143,7 @@ const completedRender = () => {
     `).join("")
 }
 
-// Add
+// Add todos
 const todoForm = document.querySelector('#addtodo') as HTMLFormElement
 todoForm.addEventListener('submit', (e) => {
     e.preventDefault();
