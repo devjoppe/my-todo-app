@@ -19,8 +19,8 @@
     <h2 class="testit">Test it out!</h2>
     <p>Type your name and email to get started &#x1F609;</p>
     <form id="user" class="userform">
-      <input id="username" class="username" type="text" name="username" placeholder="Name">
-      <input id="useremail" class="useremail" type="email" name="useremail" placeholder="Email">
+      <input id="username" class="username" type="text" name="username" placeholder="Name" required>
+      <input id="useremail" class="useremail" type="email" name="useremail" placeholder="Email" required>
       <button>Let´s GO! <span class="material-symbols-outlined">login</span></button>
     </form>
     <div class="info-box">
@@ -51,6 +51,7 @@
           </select>
           <label for="addtask"></label>
           <input id="addtask" class="addtask" type="text" name="addtask" placeholder="Add new task" required>
+          <input type="hidden" id="uid" name="uid" value="">
         </div>
       </form>
       <h2>Completed &#x1F44D;</h2>

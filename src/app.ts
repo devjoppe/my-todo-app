@@ -51,6 +51,7 @@ const qu = query(userRef)
 
 let todos: todosItem []
 let users: userItem []
+let userId: any
 
 // Fetch/update data from Firebase realtime
 onSnapshot(q, (snapshot) => {
@@ -89,7 +90,6 @@ userForm.addEventListener('submit', (e) => {
     e.preventDefault()
     const userMail: string = userForm.useremail.value
     const userName: string = userForm.username.value
-    let userId: any
     let existingUser: boolean
     const getUser = query(userRef)
     getDocs(getUser)
@@ -107,7 +107,7 @@ userForm.addEventListener('submit', (e) => {
         document.querySelector('.user-app')!.classList.add('hide')
         document.querySelector('.todo-app')!.classList.remove('hide')
 
-        existingUser ? renderTodos(userId) : newUser(userMail, userName)
+        existingUser ? renderTodos() : newUser(userMail, userName)
     })
 })
 
@@ -119,46 +119,46 @@ const newUser = (mail:string, name:string) => {
     })
         .then(() => {
             console.log("New user created")
-            let userId: any
             const newUser = query(userRef, where("email", "==", mail))
             getDocs(newUser)
             .then(user => {
                 user.forEach(uId => {
                     userId = uId.id
                 })
-                renderTodos(userId)
+                renderTodos()
             }
         )
     })
 }
 
 // Render todos
-const renderTodos = (uId:any) => {
-    todoList.innerHTML = todos.filter(item => !item.completed && item.userid === uId).map(item => {
+const renderTodos = () => {
+    document.querySelector('#uid')!.setAttribute('value', userId)
+    todoList.innerHTML = todos.filter(item => !item.completed && item.userid === userId).map(item => {
         return `<div class="listitem ongoing" data-title="${item.todo}">
             <div class="itemcontent">
                 <div class="check">
-                    <span class="material-symbols-outlined" data-done="${item.id}">done</span>
+                    <span class="material-symbols-outlined" data-user="${item.userid}" data-done="${item.id}">done</span>
                 </div>
                 <span class="itemtitle">${item.todo}</span>
             </div>
             <div class="misc">
                 <span class="category ${item.category}">${item.category}</span>
-                <span class="material-symbols-outlined trash" data-delete="${item.id}">delete</span>
+                <span class="material-symbols-outlined trash" data-user="${item.userid}" data-delete="${item.id}">delete</span>
             </div>
         </div>`
     }).join("")
-    completedRender(uId)
+    completedRender()
 }
 
 // Render todos completed
-const completedRender = (uId:any) => {
-    completedList.innerHTML = todos.filter(item => item.completed && item.userid === uId).map(item => `
+const completedRender = () => {
+    completedList.innerHTML = todos.filter(item => item.completed && item.userid === userId).map(item => `
         <div class="listitem completed" data-title="${item.todo}">
             <span>${item.todo}</span>
             <div class="misc">
                 <span class="category ${item.category}">${item.category}</span>
-                <span class="material-symbols-outlined trash" data-delete="${item.id}">delete</span>
+                <span class="material-symbols-outlined trash" data-user="${item.userid}" data-delete="${item.id}">delete</span>
             </div>
         </div>
     `).join("")
@@ -172,25 +172,34 @@ todoForm.addEventListener('submit', (e) => {
         todo: todoForm.addtask.value,
         category: todoForm.taskcategory.value,
         completed: false,
-        created: serverTimestamp()
+        created: serverTimestamp(),
+        userid: todoForm.uid.value
     })
     .then(() => {
         todoForm.reset()
+        console.log(todos)
+        renderTodos()
     })
 })
 
-// Delete from upcoming tasks
+// Delete and add as completed from upcoming tasks
 todoList.addEventListener('click', (e) => {
     const target = e.target as HTMLElement
     if(target.dataset.delete) {
         const docRef = doc(db, 'todos', target.dataset.delete)
         deleteDoc(docRef)
+        .then(() =>
+            renderTodos()
+        )
     }
     if(target.dataset.done) {
         let docRef = doc(db, 'todos', target.dataset.done)
         updateDoc(docRef, {
             completed: true
         })
+        .then(() =>
+            renderTodos()
+        )
     }
 })
 
@@ -200,6 +209,9 @@ completedList.addEventListener('click', (e) => {
     if(target.dataset.delete) {
         const docRef = doc(db, 'todos', target.dataset.delete)
         deleteDoc(docRef)
+            .then(() =>
+                renderTodos()
+            )
     }
 })
 
