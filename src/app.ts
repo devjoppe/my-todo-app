@@ -1,3 +1,5 @@
+//Todo: Need to do a logout function?
+
 import './assets/style/css/style.min.css'
 
 // Firebase Imports: getFirestore, collection and getDocs
@@ -13,7 +15,7 @@ import {
     orderBy,
     serverTimestamp,
     updateDoc,
-    // where,
+    where,
     getDocs
     } from 'firebase/firestore'
 
@@ -63,8 +65,6 @@ onSnapshot(q, (snapshot) => {
             userid: item.data().userid
         })
     })
-    renderTodos()
-    completedRender()
 })
 
 onSnapshot(qu, (snapshot)=> {
@@ -82,7 +82,6 @@ const searchForm = document.querySelector('#search') as HTMLFormElement
 const userForm = document.querySelector('#user') as HTMLFormElement
 
 // Hide the container
-// Todo Delete this one after the test.
 document.querySelector('.todo-app')!.classList.add('hide')
 
 // Check user email to the database
@@ -90,25 +89,27 @@ userForm.addEventListener('submit', (e) => {
     e.preventDefault()
     const userMail: string = userForm.useremail.value
     const userName: string = userForm.username.value
+    let userId: any
     let existingUser: boolean
     const getUser = query(userRef)
     getDocs(getUser)
-        .then(userItem => {
-            userItem.docs.forEach(user => {
-                user.data().email === userMail ? existingUser = true : existingUser = false
-            })
-            if(existingUser) {
-                isUser()
+    .then(userItem => {
+        userItem.docs.forEach(user => {
+            if(user.data().email === userMail) {
+                existingUser = true
+                userId = user.id
             } else {
-                newUser(userMail, userName)
+                existingUser = false
             }
         })
-})
+        userForm.reset()
 
-// User exist
-const isUser = () => {
-    console.log("Existing user")
-}
+        document.querySelector('.user-app')!.classList.add('hide')
+        document.querySelector('.todo-app')!.classList.remove('hide')
+
+        existingUser ? renderTodos(userId) : newUser(userMail, userName)
+    })
+})
 
 // New user, save user data
 const newUser = (mail:string, name:string) => {
@@ -118,12 +119,22 @@ const newUser = (mail:string, name:string) => {
     })
         .then(() => {
             console.log("New user created")
-        })
+            let userId: any
+            const newUser = query(userRef, where("email", "==", mail))
+            getDocs(newUser)
+            .then(user => {
+                user.forEach(uId => {
+                    userId = uId.id
+                })
+                renderTodos(userId)
+            }
+        )
+    })
 }
 
 // Render todos
-const renderTodos = () => {
-    todoList.innerHTML = todos.filter(item => !item.completed).map(item => {
+const renderTodos = (uId:any) => {
+    todoList.innerHTML = todos.filter(item => !item.completed && item.userid === uId).map(item => {
         return `<div class="listitem ongoing" data-title="${item.todo}">
             <div class="itemcontent">
                 <div class="check">
@@ -137,11 +148,12 @@ const renderTodos = () => {
             </div>
         </div>`
     }).join("")
+    completedRender(uId)
 }
 
 // Render todos completed
-const completedRender = () => {
-    completedList.innerHTML = todos.filter(item => item.completed).map(item => `
+const completedRender = (uId:any) => {
+    completedList.innerHTML = todos.filter(item => item.completed && item.userid === uId).map(item => `
         <div class="listitem completed" data-title="${item.todo}">
             <span>${item.todo}</span>
             <div class="misc">
