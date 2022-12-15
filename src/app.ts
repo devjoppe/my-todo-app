@@ -89,27 +89,36 @@ document.querySelector('.todo-app')!.classList.add('hide')
 userForm.addEventListener('submit', (e) => {
     e.preventDefault()
     const userMail: string = userForm.useremail.value
+    const userName: string = userForm.username.value
+    let existingUser: boolean
     const getUser = query(userRef)
     getDocs(getUser)
         .then(userItem => {
             userItem.docs.forEach(user => {
-                if (user.data().email === userMail) {
-                    existingUser()
-                } else {
-                    newUser()
-                }
+                user.data().email === userMail ? existingUser = true : existingUser = false
             })
+            if(existingUser) {
+                isUser()
+            } else {
+                newUser(userMail, userName)
+            }
         })
 })
 
 // User exist
-const existingUser = () => {
+const isUser = () => {
     console.log("Existing user")
 }
 
 // New user, save user data
-const newUser = () => {
-    console.log("New user")
+const newUser = (mail:string, name:string) => {
+    addDoc(userRef, {
+        username: name,
+        email: mail
+    })
+        .then(() => {
+            console.log("New user created")
+        })
 }
 
 // Render todos

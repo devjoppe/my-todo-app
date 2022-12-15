@@ -27,3 +27,4 @@ prepros.config
 
 .env
 src/assets/script/api/getapi.ts
+public
