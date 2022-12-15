@@ -42,7 +42,9 @@ interface todosItem {
 }
 
 interface userItem {
-    username: string
+    username: string,
+    email: string,
+    id: any
 }
 
 // Query
@@ -72,7 +74,9 @@ onSnapshot(qu, (snapshot)=> {
     users = []
     snapshot.docs.forEach(item => {
         users.push({
-            username: item.data().username
+            username: item.data().username,
+            email: item.data().email,
+            id: item.id
         })
     })
 })
@@ -90,25 +94,14 @@ userForm.addEventListener('submit', (e) => {
     e.preventDefault()
     const userMail: string = userForm.useremail.value
     const userName: string = userForm.username.value
-    let existingUser: boolean
-    const getUser = query(userRef)
-    getDocs(getUser)
-    .then(userItem => {
-        userItem.docs.forEach(user => {
-            if(user.data().email === userMail) {
-                existingUser = true
-                userId = user.id
-            } else {
-                existingUser = false
-            }
-        })
-        userForm.reset()
 
-        document.querySelector('.user-app')!.classList.add('hide')
-        document.querySelector('.todo-app')!.classList.remove('hide')
+    const isUser = users.filter(user => user.email === userMail).map(item => item.id).join('')
+    userId = isUser
 
-        existingUser ? renderTodos() : newUser(userMail, userName)
-    })
+    document.querySelector('.user-app')!.classList.add('hide')
+    document.querySelector('.todo-app')!.classList.remove('hide')
+
+    isUser ? renderTodos() : newUser(userMail, userName)
 })
 
 // New user, save user data
