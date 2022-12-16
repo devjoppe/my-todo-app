@@ -66,12 +66,20 @@ p {
     align-items: center;
 }
 
-.todo-app, .user-app {
+.todo-app, .user-app, .user-box {
     @include box;
     padding: 48px;
     background: white;
-    min-width: 640px;
+    width: 640px;
     box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
+}
+
+.user-box {
+    display: inline-block;
+    margin-top: 78px;
+    height: fit-content;
+    width: 580px;
+    flex-direction: column;
 }
 
 .user-app {
@@ -95,6 +103,17 @@ p {
 
 .inner-content {
     width: 100%;
+}
+
+.existing-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
 }
 
 .ongoing {

@@ -105,7 +105,20 @@ userForm.addEventListener('submit', (e) => {
     document.querySelector('.user-app')!.classList.add('hide')
     document.querySelector('.todo-app')!.classList.remove('hide')
 
-    isUser ? renderTodos() : newUser(userMail, userName)
+    isUser ? headsUp() : newUser(userMail, userName)
+})
+
+// Heads up existing user
+const headsUpMsg = document.querySelector('.existing-container')!
+const headsUp = () => {
+    headsUpMsg.classList.remove('hide')
+}
+headsUpMsg.addEventListener('click', (e) => {
+    const target = e.target as HTMLButtonElement
+    if(target.tagName === 'BUTTON') {
+        headsUpMsg.classList.add('hide')
+        renderTodos()
+    }
 })
 
 // New user, save user data
@@ -164,7 +177,7 @@ const renderTodos = () => {
 const completedRender = () => {
     completedList.innerHTML = todos.filter(item => item.completed && item.userid === userId).map(item => `
         <div class="listitem completed" data-title="${item.todo}">
-            <span>${item.todo}</span>
+            <span class="itemtitle">${item.todo}</span>
             <div class="misc">
                 <span class="category ${item.category}">${item.category}</span>
                 <span class="material-symbols-outlined trash" data-user="${item.userid}" data-delete="${item.id}">delete</span>
