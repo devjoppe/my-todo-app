@@ -154,6 +154,9 @@ const renderTodos = () => {
             </div>
         </div>`
     }).join("")
+    if(!todoList.innerHTML) {
+        todoList.innerHTML = `You have nothing todo &#x1F62E;`
+    }
     completedRender()
 }
 
@@ -168,6 +171,9 @@ const completedRender = () => {
             </div>
         </div>
     `).join("")
+    if(!completedList.innerHTML) {
+        completedList.innerHTML = `Zero completed &#128564;`
+    }
 }
 
 // Add todos
