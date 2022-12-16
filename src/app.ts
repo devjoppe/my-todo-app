@@ -2,6 +2,12 @@
 
 import './assets/style/css/style.min.css'
 
+// Interfaces
+import {
+    todosItem,
+    userItem
+    } from "./assets/script/interfaces"
+
 // Firebase Imports: getFirestore, collection and getDocs
 import {initializeApp} from 'firebase/app'
 import {
@@ -31,21 +37,6 @@ const db = getFirestore()
 // Select collection in Firebase
 const colRef = collection(db, 'todos')
 const userRef = collection(db, 'user')
-
-interface todosItem {
-    todo: string,
-    completed: boolean,
-    id: any,
-    category: string,
-    created: any,
-    userid: string
-}
-
-interface userItem {
-    username: string,
-    email: string,
-    id: any
-}
 
 // Query
 const q = query(colRef, orderBy('created', 'desc'))
