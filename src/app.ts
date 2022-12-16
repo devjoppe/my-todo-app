@@ -98,6 +98,9 @@ userForm.addEventListener('submit', (e) => {
     const isUser = users.filter(user => user.email === userMail).map(item => item.id).join('')
     userId = isUser
 
+    //Todo: Need to figure out how to do this?
+    setTodo(userId)
+
     document.querySelector('.user-app')!.classList.add('hide')
     document.querySelector('.todo-app')!.classList.remove('hide')
 
@@ -122,6 +125,14 @@ const newUser = (mail:string, name:string) => {
             }
         )
     })
+}
+
+let userTodos: any [] = []
+
+// Set the todolist based on user
+const setTodo = (userId: any) => {
+    userTodos = todos.filter(item => userId.includes(item.userid))
+    console.log(userTodos)
 }
 
 // Render todos
@@ -224,7 +235,7 @@ const filterTasks = (searchKey: string) => {
             item.classList.add('hide')
         }
     })
-    const searchQuery = todos.filter((item) => item.todo.toLowerCase().trim().includes(searchKey))
+    const searchQuery = userTodos.filter((item: any) => item.todo.toLowerCase().trim().includes(searchKey))
     searchQuery.forEach(item => {
         const searchedItem = document.querySelector('[data-title="' + item.todo + '"]')!
         if(!item.completed) {
