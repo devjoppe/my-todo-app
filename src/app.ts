@@ -54,6 +54,7 @@ const qu = query(userRef)
 let todos: todosItem []
 let users: userItem []
 let userId: any
+let userName: string
 
 // Fetch/update data from Firebase realtime
 onSnapshot(q, (snapshot) => {
@@ -93,7 +94,7 @@ document.querySelector('.todo-app')!.classList.add('hide')
 userForm.addEventListener('submit', (e) => {
     e.preventDefault()
     const userMail: string = userForm.useremail.value
-    const userName: string = userForm.username.value
+    userName = userForm.username.value
 
     const isUser = users.filter(user => user.email === userMail).map(item => item.id).join('')
     userId = isUser
@@ -127,9 +128,9 @@ const newUser = (mail:string, name:string) => {
     })
 }
 
+// Set the todolist based on user
 let userTodos: any [] = []
 
-// Set the todolist based on user
 const setTodo = (userId: any) => {
     userTodos = todos.filter(item => userId.includes(item.userid))
     console.log(userTodos)
@@ -137,6 +138,7 @@ const setTodo = (userId: any) => {
 
 // Render todos
 const renderTodos = () => {
+    document.querySelector('#usertitle')!.innerHTML = `${userName} Todos &#x1F4C3;`
     document.querySelector('#uid')!.setAttribute('value', userId)
     todoList.innerHTML = todos.filter(item => !item.completed && item.userid === userId).map(item => {
         return `<div class="listitem ongoing" data-title="${item.todo}">
