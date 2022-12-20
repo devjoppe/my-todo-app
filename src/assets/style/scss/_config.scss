@@ -75,11 +75,16 @@ p {
 }
 
 .user-box {
-    display: inline-block;
+    display: flex;
     margin-top: 78px;
     height: fit-content;
     width: 580px;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    p, h2 {
+        text-align: center;
+    }
 }
 
 .user-app {

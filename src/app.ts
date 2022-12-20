@@ -1,5 +1,3 @@
-//Todo: Need to do a logout function?
-
 import './assets/style/css/style.min.css'
 
 // Interfaces
@@ -35,9 +33,9 @@ initializeApp(firebaseConfig)
 const db = getFirestore()
 
 // Select collection in Firebase
+//  Collection
 const colRef = collection(db, 'todos')
 const userRef = collection(db, 'user')
-
 // Query
 const q = query(colRef, orderBy('created', 'desc'))
 const qu = query(userRef)
@@ -255,3 +253,24 @@ const filterTasks = (searchKey: string) => {
         }
     })
 }
+
+// Exit and remove user from database
+document.querySelector('.logout')!.addEventListener('click', () => {
+    let docQuery = query(colRef, where('userid', '==', userId))
+    getDocs(docQuery)
+        .then(docItem => {
+            docItem.forEach(docId => {
+              console.log(docId.id)
+                const docRef = doc(db, 'todos', docId.id)
+                deleteDoc(docRef)
+                    .then(() => {
+                        console.log("All todos deleted")
+                    })
+            })
+        })
+    /* const docRef = doc(db, 'todos', docQuery.id)
+    deleteDoc(docRef)
+        .then(() =>
+            console.log("All todos deleted?")
+        ) */
+})

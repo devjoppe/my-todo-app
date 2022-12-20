@@ -7,6 +7,10 @@
     justify-content: center;
 }
 
+.close-box {
+    width: fit-content;
+}
+
 //Search and user component
 input[type=text], input[type=email] {
     font-family: config.$primary-font;
@@ -91,8 +95,8 @@ button {
 
 .check {
     background: config.$color-pink;
-    width: 32px;
-    height: 32px;
+    width: fit-content;
+    height: fit-content;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -100,6 +104,7 @@ button {
     color: config.$color-green;
     cursor: pointer;
     margin-right: 16px;
+    box-sizing: border-box;
     &:hover {
         background: config.$color-green;
         color: config.$color-pink;
@@ -136,4 +141,21 @@ button {
 
 .addnewtask {
     display: flex;
+}
+
+// Header and logout
+.title-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logout {
+    color: config.$color-pink;
+    margin-bottom: 16px;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
 }
