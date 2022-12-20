@@ -236,6 +236,11 @@ searchForm.addEventListener('keyup', (e) => {
     filterTasks(searchKey)
 })
 
+// Disable submit on search
+searchForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+})
+
 // Search tasks function
 const filterTasks = (searchKey: string) => {
     console.log(searchKey)
@@ -274,9 +279,4 @@ document.querySelector('.logout')!.addEventListener('click', () => {
                     })
             })
         })
-    /* const docRef = doc(db, 'todos', docQuery.id)
-    deleteDoc(docRef)
-        .then(() =>
-            console.log("All todos deleted?")
-        ) */
 })
