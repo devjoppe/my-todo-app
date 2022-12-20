@@ -143,7 +143,7 @@ const renderTodos = () => {
     document.querySelector('#usertitle')!.innerHTML = `${userName} Todos &#x1F4C3;`
     document.querySelector('#uid')!.setAttribute('value', userId)
     todoList.innerHTML = todos.filter(item => !item.completed && item.userid === userId).map(item => {
-        return `<div class="listitem ongoing" data-title="${item.todo}">
+        return `<div class="listitem ongoing" data-title="${item.todo}" data-category="${item.category}" data-itemid="${item.id}">
             <div class="itemcontent">
                 <div class="check">
                     <span class="material-symbols-outlined" data-user="${item.userid}" data-done="${item.id}">done</span>
@@ -152,6 +152,7 @@ const renderTodos = () => {
             </div>
             <div class="misc">
                 <span class="category ${item.category}">${item.category}</span>
+                <span class="material-symbols-outlined pen" data-edit="${item.id}">edit</span>
                 <span class="material-symbols-outlined trash" data-user="${item.userid}" data-delete="${item.id}">delete</span>
             </div>
         </div>`
@@ -194,6 +195,44 @@ todoForm.addEventListener('submit', (e) => {
         console.log(todos)
         renderTodos()
     })
+})
+
+// Edit todos
+todoList.addEventListener('click', (e) => {
+    const listEditItem = document.querySelectorAll('.listitem')
+    const target = e.target as HTMLElement
+    if(target.dataset.edit) {
+        listEditItem.forEach(item => {
+            let itemDiv = item as HTMLDivElement
+            if(itemDiv.dataset.itemid === target.dataset.edit) {
+                let itemCategoryNone: String = ''
+                let itemCategoryPrivate: String = ''
+                let itemCategoryWork: String = ''
+                switch (itemDiv.dataset.category) {
+                    case 'none':
+                        itemCategoryNone = 'Selected'
+                        break
+                    case 'private':
+                        itemCategoryPrivate = 'Selected'
+                        break
+                    case 'work':
+                        itemCategoryWork = 'Selected'
+                        break
+                }
+                itemDiv.innerHTML = `
+                <form id="edit">
+                    <input id="edit-todo" class="edit-input" type="text" name="edit-field" value="${itemDiv.dataset.title}">
+                    <label for="category-edit"></label>
+                    <select class="addcategory-edit" id="category-edit" name="taskcategory-edit">
+                        <option value="none" ${itemCategoryNone}>None</option>
+                        <option value="private" ${itemCategoryPrivate}>Private</option>
+                        <option value="work" ${itemCategoryWork}>Work</option>
+                    </select>
+                </form>
+                `
+            }
+        })
+    }
 })
 
 // Delete and add as completed from upcoming tasks
