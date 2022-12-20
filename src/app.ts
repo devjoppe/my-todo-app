@@ -177,6 +177,7 @@ const completedRender = () => {
     if(!completedList.innerHTML) {
         completedList.innerHTML = `Zero completed &#128564;`
     }
+    resetHide()
 }
 
 // Add todos
@@ -191,6 +192,7 @@ todoForm.addEventListener('submit', (e) => {
         userid: todoForm.uid.value
     })
     .then(() => {
+        searchForm.reset()
         todoForm.reset()
         console.log(todos)
         renderTodos()
@@ -289,6 +291,9 @@ completedList.addEventListener('click', (e) => {
 searchForm.addEventListener('keyup', (e) => {
     e.preventDefault()
     const searchKey: string = searchForm.searchfield.value.toLowerCase().trim()
+    if(!searchKey || searchKey === '') {
+        renderTodos()
+    }
     filterTasks(searchKey)
 })
 
@@ -311,6 +316,17 @@ const filterTasks = (searchKey: string) => {
         const searchedItem = document.querySelector('[data-title="' + item.todo + '"]')!
         if(!item.completed) {
             searchedItem.classList.remove('hide')
+        }
+    })
+}
+// TODO: Something is wrong with the hide and show class at the searchedItem above!
+// Reset all hide on list items
+const resetHide = () => {
+    console.log("Nothing to filter")
+    let listItems = document.querySelectorAll('.listitem')!
+    listItems.forEach(item => {
+        if(item.classList.contains('hide')){
+            item.classList.remove('hide')
         }
     })
 }
