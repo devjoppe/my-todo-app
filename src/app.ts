@@ -262,9 +262,15 @@ document.querySelector('.logout')!.addEventListener('click', () => {
             docItem.forEach(docId => {
               console.log(docId.id)
                 const docRef = doc(db, 'todos', docId.id)
+                const userRef = doc(db, 'user', userId)
                 deleteDoc(docRef)
                     .then(() => {
                         console.log("All todos deleted")
+                        deleteDoc(userRef)
+                            .then(() => {
+                                console.log("User deleted")
+                                window.location.reload()
+                            })
                     })
             })
         })
