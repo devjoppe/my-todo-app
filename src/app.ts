@@ -97,7 +97,7 @@ userForm.addEventListener('submit', (e) => {
     isUser ? headsUp() : newUser(userMail, userName)
 })
 
-// Heads up existing user
+// Heads up -> existing user
 const headsUpMsg = document.querySelector('.existing-container')!
 const headsUp = () => {
     headsUpMsg.classList.remove('hide')
@@ -220,10 +220,10 @@ todoList.addEventListener('click', (e) => {
                         break
                 }
                 itemDiv.innerHTML = `
-                <form id="edit">
-                    <input id="edit-todo" class="edit-input" type="text" name="edit-field" value="${itemDiv.dataset.title}">
+                <form id="edit" data-todoid="${target.dataset.edit}">
+                    <input id="edit-todo" class="edit-input" type="text" name="editfield" value="${itemDiv.dataset.title}">
                     <label for="category-edit"></label>
-                    <select class="addcategory-edit" id="category-edit" name="taskcategory-edit">
+                    <select class="addcategory-edit" id="category-edit" name="taskcategoryedit">
                         <option value="none" ${itemCategoryNone}>None</option>
                         <option value="private" ${itemCategoryPrivate}>Private</option>
                         <option value="work" ${itemCategoryWork}>Work</option>
@@ -232,6 +232,23 @@ todoList.addEventListener('click', (e) => {
                 `
             }
         })
+    }
+})
+
+// Save edited data to server
+todoList.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const target = e.target as HTMLFormElement
+    if(target.tagName === 'FORM') {
+        const docId:string = target.dataset.todoid!
+        let docRef = doc(db, 'todos', docId)
+        updateDoc(docRef, {
+            todo: target.editfield.value,
+            category: target.taskcategoryedit.value
+        })
+            .then(() =>
+                renderTodos()
+            )
     }
 })
 
