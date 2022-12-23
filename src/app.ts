@@ -308,8 +308,6 @@ const filterTasks = (searchKey: string) => {
     const taskItem = document.querySelectorAll('.listitem')
     taskItem.forEach(item => {
         if(!item.classList.contains('completed') && !item.classList.contains('hide')) {
-            console.log("Going hide")
-            console.log(item)
             listElement = item
             item.classList.add('hide')
         }
@@ -319,15 +317,18 @@ const filterTasks = (searchKey: string) => {
     searchQuery.forEach(item => {
         const searchedItem = document.querySelector('[data-title="' + item.todo + '"]')!
         if(!item.completed && listElement.classList.contains('hide')) {
-            console.log("display")
             searchedItem.classList.remove('hide')
+            console.log("HEEEEJ")
+        }
+        if(!item) {
+            //TODO: Do somehting that if there is no hit on the filter text, then do this!
+            console.log("WAATTA")
         }
     })
 }
 
 // Reset all hide on list items
 const resetHide = () => {
-    console.log("Reset filter")
     let listItems = document.querySelectorAll('.listitem')!
     listItems.forEach(item => {
         item.classList.remove('hide')
