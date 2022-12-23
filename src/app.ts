@@ -88,7 +88,6 @@ userForm.addEventListener('submit', (e) => {
     const isUser = users.filter(user => user.email === userMail).map(item => item.id).join('')
     userId = isUser
 
-    //Todo: Need to figure out how to do this?
     setTodo(userId)
 
     document.querySelector('.user-app')!.classList.add('hide')
@@ -130,16 +129,9 @@ const newUser = (mail:string, name:string) => {
     })
 }
 
-// Set the todolist based on user
-let userTodos: any [] = []
-
-const setTodo = (userId: any) => {
-    userTodos = todos.filter(item => userId.includes(item.userid))
-    console.log(userTodos)
-}
-
 // Render todos
 const renderTodos = () => {
+    console.log("Render todos")
     document.querySelector('#usertitle')!.innerHTML = `${userName} Todos &#x1F4C3;`
     document.querySelector('#uid')!.setAttribute('value', userId)
     todoList.innerHTML = todos.filter(item => !item.completed && item.userid === userId).map(item => {
@@ -160,6 +152,7 @@ const renderTodos = () => {
     if(!todoList.innerHTML) {
         todoList.innerHTML = `You have nothing todo &#x1F62E;`
     }
+    setTodo(userId) // Updates the user todos array
     completedRender()
 }
 
@@ -177,7 +170,6 @@ const completedRender = () => {
     if(!completedList.innerHTML) {
         completedList.innerHTML = `Zero completed &#128564;`
     }
-    resetHide()
 }
 
 // Add todos
@@ -194,7 +186,6 @@ todoForm.addEventListener('submit', (e) => {
     .then(() => {
         searchForm.reset()
         todoForm.reset()
-        console.log(todos)
         renderTodos()
     })
 })
@@ -261,7 +252,7 @@ todoList.addEventListener('click', (e) => {
         const docRef = doc(db, 'todos', target.dataset.delete)
         deleteDoc(docRef)
         .then(() =>
-            renderTodos()
+            renderTodos(),
         )
     }
     if(target.dataset.done) {
@@ -287,12 +278,19 @@ completedList.addEventListener('click', (e) => {
     }
 })
 
+// Set the todolist based on user
+let userTodos: any [] = []
+const setTodo = (userId: any) => {
+    userTodos = todos.filter(item => userId.includes(item.userid))
+    console.log("Set new Array for user todos", userTodos)
+}
+
 // Search function
 searchForm.addEventListener('keyup', (e) => {
     e.preventDefault()
     const searchKey: string = searchForm.searchfield.value.toLowerCase().trim()
     if(!searchKey || searchKey === '') {
-        renderTodos()
+        resetHide()
     }
     filterTasks(searchKey)
 })
@@ -304,35 +302,41 @@ searchForm.addEventListener('submit', (e) => {
 
 // Search tasks function
 const filterTasks = (searchKey: string) => {
+    console.log("Filter todos")
     console.log(searchKey)
+    let listElement:any
     const taskItem = document.querySelectorAll('.listitem')
     taskItem.forEach(item => {
-        if(!item.classList.contains('completed')) {
+        if(!item.classList.contains('completed') && !item.classList.contains('hide')) {
+            console.log("Going hide")
+            console.log(item)
+            listElement = item
             item.classList.add('hide')
         }
     })
     const searchQuery = userTodos.filter((item: any) => item.todo.toLowerCase().trim().includes(searchKey))
+    console.log(userTodos)
     searchQuery.forEach(item => {
         const searchedItem = document.querySelector('[data-title="' + item.todo + '"]')!
-        if(!item.completed) {
+        if(!item.completed && listElement.classList.contains('hide')) {
+            console.log("display")
             searchedItem.classList.remove('hide')
         }
     })
 }
-// TODO: Something is wrong with the hide and show class at the searchedItem above!
+
 // Reset all hide on list items
 const resetHide = () => {
-    console.log("Nothing to filter")
+    console.log("Reset filter")
     let listItems = document.querySelectorAll('.listitem')!
     listItems.forEach(item => {
-        if(item.classList.contains('hide')){
-            item.classList.remove('hide')
-        }
+        item.classList.remove('hide')
     })
 }
 
 // Exit and remove user from database
 document.querySelector('.logout')!.addEventListener('click', () => {
+    console.log("Exit and remove user")
     let docQuery = query(colRef, where('userid', '==', userId))
     getDocs(docQuery)
         .then(docItem => {
