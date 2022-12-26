@@ -65,14 +65,15 @@ p {
 // Main divs
 .container-center {
     display: flex;
-    height: 100vh;
+    align-items: unset;
+    height: fit-content;
     width: 100%;
     justify-content: center;
-    align-items: center;
 }
 
 .todo-app, .user-app, .user-box, .delete-box {
     @include box;
+    margin: 32px;
     padding: 48px;
     background: white;
     width: 640px;

@@ -1,0 +1,26 @@
+// Responsive
+
+@media only screen and (max-width: 520px){
+  .container-center {
+    align-items: unset;
+    height: fit-content;
+  }
+  .user-app, .user-box, .todo-app {
+    width: 100%;
+    margin: 16px;
+    padding: 32px;
+    height: fit-content;
+  }
+  .userform {
+    padding: 0;
+  }
+  .welcome {
+    width: 100%;
+  }
+  .title-header {
+    flex-direction: column;
+  }
+  .logout {
+    margin-bottom: 32px;
+  }
+}
