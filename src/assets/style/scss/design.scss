@@ -59,11 +59,18 @@ select {
 .addcategory-edit {
     margin-bottom: 0;
     width: 30%;
+    margin-right: 16px;
+}
+
+.edit-button {
+    height: 48px;
+    align-items: center;
 }
 
 #edit {
     display: flex;
     width: 100%;
+    z-index: 100;
 }
 
 // User form

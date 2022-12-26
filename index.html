@@ -27,15 +27,15 @@
     </div>
   </div>
   <!-- End: User input -->
-  <!-- Start: Existing user -->
   <div class="existing-container hide">
-    <div class="user-box">
+  <!-- Start: Existing user -->
+    <div class="user-box hide">
       <h2>Welcome back &#128075;</h2>
       <p>You have visited this app before<br> and can access your previously created tasks.&#128558;</p>
       <button id="headsup" class="close-box">Thanks for letting me know!</button>
     </div>
-  </div>
   <!-- End: Existing user -->
+  </div>
   <!-- Start: todoApp -->
   <div class="todo-app">
     <div class="inner-content">
@@ -48,11 +48,11 @@
         <label for="search-field"></label>
         <input id="search-field" class="search" type="text" name="searchfield" placeholder="Filter">
       </form>
-      <h2>Tasks scheduled for this week"</h2>
+      <h2>Tasks scheduled for this week</h2>
       <div id="todolist" class="todolist">
         <!-- List with ongoing tasks -->
       </div>
-      <span id="nofilter"></span>
+      <span id="nofilter" class="hide">Your filter did not return any matches. &#128556;</span>
       <form id="addtodo">
         <div class="addnewtask">
           <label for="category"></label>

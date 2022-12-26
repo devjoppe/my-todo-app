@@ -75,6 +75,7 @@ const todoList = document.querySelector('#todolist')!
 const completedList = document.querySelector('#completedlist')!
 const searchForm = document.querySelector('#search') as HTMLFormElement
 const userForm = document.querySelector('#user') as HTMLFormElement
+const darkBg = document.querySelector('.existing-container') as HTMLDivElement
 
 // Hide the container
 document.querySelector('.todo-app')!.classList.add('hide')
@@ -97,14 +98,16 @@ userForm.addEventListener('submit', (e) => {
 })
 
 // Heads up -> existing user
-const headsUpMsg = document.querySelector('.existing-container')!
+const headsUpMsg = document.querySelector('.user-box')!
 const headsUp = () => {
     headsUpMsg.classList.remove('hide')
+    darkBg.classList.remove('hide')
 }
 headsUpMsg.addEventListener('click', (e) => {
     const target = e.target as HTMLButtonElement
     if(target.tagName === 'BUTTON') {
         headsUpMsg.classList.add('hide')
+        darkBg.classList.add('hide')
         renderTodos()
     }
 })
@@ -197,6 +200,7 @@ todoList.addEventListener('click', (e) => {
     if(target.dataset.edit) {
         listEditItem.forEach(item => {
             let itemDiv = item as HTMLDivElement
+            darkBg.classList.remove('hide')
             if(itemDiv.dataset.itemid === target.dataset.edit) {
                 let itemCategoryNone: String = ''
                 let itemCategoryPrivate: String = ''
@@ -221,6 +225,7 @@ todoList.addEventListener('click', (e) => {
                         <option value="private" ${itemCategoryPrivate}>Private</option>
                         <option value="work" ${itemCategoryWork}>Work</option>
                     </select>
+                    <button class="edit-button">Update</button>
                 </form>
                 `
             }
@@ -231,6 +236,7 @@ todoList.addEventListener('click', (e) => {
 // Save edited data to server
 todoList.addEventListener('submit', (e) => {
     e.preventDefault()
+    darkBg.classList.add('hide')
     const target = e.target as HTMLFormElement
     if(target.tagName === 'FORM') {
         const docId:string = target.dataset.todoid!
@@ -310,7 +316,7 @@ const filterTasks = (searchKey: string) => {
     taskItem.forEach(item => {
         console.log(noFilter)
         if(item.classList.contains('hide') && !noFilter) {
-            filterText.innerHTML = `Your filter did not return any matches. &#128556;`
+            filterText.classList.remove('hide')
         }
         if(!item.classList.contains('completed') && !item.classList.contains('hide')) {
             item.classList.add('hide')
@@ -323,7 +329,7 @@ const filterTasks = (searchKey: string) => {
         if(!item.completed && searchedItem.classList.contains('hide')) {
             searchedItem.classList.remove('hide')
             noFilter = true
-            filterText.innerHTML = ``
+            filterText.classList.add('hide')
         }
     })
 }
