@@ -20,7 +20,8 @@ import {
     serverTimestamp,
     updateDoc,
     where,
-    getDocs
+    getDocs,
+    getDoc
     } from 'firebase/firestore'
 
 // API Config
@@ -251,15 +252,11 @@ todoList.addEventListener('submit', (e) => {
     }
 })
 
-// Delete and add as completed from upcoming tasks
+// Click delete or add as completed from upcoming tasks
 todoList.addEventListener('click', (e) => {
     const target = e.target as HTMLElement
     if(target.dataset.delete) {
-        const docRef = doc(db, 'todos', target.dataset.delete)
-        deleteDoc(docRef)
-        .then(() =>
-            renderTodos(),
-        )
+        deleteMsg(target.dataset.delete)
     }
     if(target.dataset.done) {
         let docRef = doc(db, 'todos', target.dataset.done)
@@ -272,17 +269,59 @@ todoList.addEventListener('click', (e) => {
     }
 })
 
-// Delete from completed tasks
+// Click delete from completed tasks
 completedList.addEventListener('click', (e) => {
     const target = e.target as HTMLElement
     if(target.dataset.delete) {
-        const docRef = doc(db, 'todos', target.dataset.delete)
-        deleteDoc(docRef)
-            .then(() =>
-                renderTodos()
-            )
+        deleteMsg(target.dataset.delete)
     }
 })
+
+// Delete message
+const deleteBox = document.querySelector('.delete-box') as HTMLDivElement
+const deleteMsg = (targetId:any) => {
+    const docRef = doc(db, 'todos', targetId)
+    let docData:any
+    getDoc(docRef)
+        .then(docItem => {
+            docData = docItem.data()
+            deleteBox.classList.remove('hide')
+            darkBg.classList.remove('hide')
+            deleteBox.innerHTML = `
+            <h2>Delete? &#128543;</h2>
+            <span>
+                Are you sure you want to delete?<br>
+                <strong>${docData.todo}</strong>
+            </span>
+            <div class="delete-buttons">
+                <button data-id="${docItem.id}" data-action="delete">Yes please</button>
+                <button class="cancel" data-action="cancel" >No way!</button>
+            </div>`
+        })
+}
+
+// Delete check
+deleteBox.addEventListener('click', (e:any) => {
+    const target = e.target as HTMLElement
+    darkBg.classList.add('hide')
+    deleteBox.classList.add('hide')
+    if(target.tagName === 'BUTTON') {
+        if(target.dataset.action === 'cancel') {
+            renderTodos()
+        } else if(target.dataset.action === 'delete' && target.dataset.id) {
+            deleteTodos(target.dataset.id)
+        }
+    }
+})
+
+// Delete todos
+const deleteTodos = (targetId:string) => {
+    const docRef = doc(db, 'todos', targetId)
+    deleteDoc(docRef)
+        .then(() =>
+            renderTodos()
+        )
+}
 
 // Set the todolist based on user
 let userTodos: any [] = []
