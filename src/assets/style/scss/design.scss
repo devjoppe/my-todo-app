@@ -29,6 +29,11 @@ select {
     }
 }
 
+#nofilter {
+    display: inline-block;
+    margin-bottom: 16px;
+}
+
 .search, .addtask, .addcategory, .username, .useremail, .edit-input, .addcategory-edit {
     box-sizing: border-box;
     width: 100%;

@@ -304,25 +304,26 @@ searchForm.addEventListener('submit', (e) => {
 const filterTasks = (searchKey: string) => {
     console.log("Filter todos")
     console.log(searchKey)
-    let listElement:any
+    let noFilter:boolean = false
+    const filterText = document.querySelector('#nofilter') as HTMLSpanElement ?? ''
     const taskItem = document.querySelectorAll('.listitem')
     taskItem.forEach(item => {
+        console.log(noFilter)
+        if(item.classList.contains('hide') && !noFilter) {
+            filterText.innerHTML = `Your filter did not return any matches. &#128556;`
+        }
         if(!item.classList.contains('completed') && !item.classList.contains('hide')) {
-            listElement = item
             item.classList.add('hide')
         }
     })
     const searchQuery = userTodos.filter((item: any) => item.todo.toLowerCase().trim().includes(searchKey))
     console.log(userTodos)
     searchQuery.forEach(item => {
-        const searchedItem = document.querySelector('[data-title="' + item.todo + '"]')!
-        if(!item.completed && listElement.classList.contains('hide')) {
+        const searchedItem = document.querySelector('[data-title="' + item.todo + '"]') as HTMLDivElement
+        if(!item.completed && searchedItem.classList.contains('hide')) {
             searchedItem.classList.remove('hide')
-            console.log("HEEEEJ")
-        }
-        if(!item) {
-            //TODO: Do somehting that if there is no hit on the filter text, then do this!
-            console.log("WAATTA")
+            noFilter = true
+            filterText.innerHTML = ``
         }
     })
 }
