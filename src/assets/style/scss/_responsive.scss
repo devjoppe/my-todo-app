@@ -1,9 +1,15 @@
 // Responsive
 
-@media only screen and (max-width: 520px){
+@media only screen and (max-width: 680px){
+  html,body {
+    height: 100%;
+  }
   .container-center {
     align-items: unset;
     height: fit-content;
+  }
+  .existing-container {
+    position: fixed;
   }
   .user-app, .user-box, .todo-app {
     width: 100%;
@@ -42,11 +48,42 @@
   .search {
     margin-bottom: 16px;
   }
-  .search, .addcategory, .addtask {
+  .search, .addcategory {
     font-size: 16px;
   }
-  .addcategory {
-    width: 100%;
+  .addtask {
+    font-size: 14px;
     margin-bottom: 16px;
+  }
+  .addcategory {
+    width: 50%;
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  #edit {
+    flex-direction: column;
+  }
+  .addcategory-edit {
+    width: 100%;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .edit-input {
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .edit-button {
+    font-size: 14px;
+  }
+  .delete-buttons {
+    button {
+      font-size: 14px;
+    }
+  }
+  .resp-button {
+    display: flex;
+    width: 100%;
+    font-size: 14px;
+    margin-bottom: 32px;
   }
 }

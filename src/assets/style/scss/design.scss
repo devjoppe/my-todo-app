@@ -122,20 +122,20 @@ button {
 }
 
 .check {
-    background: config.$color-pink;
+    //background: config.$color-yellow;
     width: fit-content;
     height: fit-content;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    color: config.$color-green;
+    color: config.$color-dark-80;
     cursor: pointer;
     margin-right: 16px;
     box-sizing: border-box;
     &:hover {
-        background: config.$color-green;
-        color: config.$color-pink;
+        background: config.$color-dark-80;
+        color: config.$color-green;
     }
 }
 

@@ -11,6 +11,7 @@ $color-yellow: #FFF9B0;
 $color-dark: rgb(32, 32, 32);
 $color-dark-80: rgb(58, 58, 58);
 $color-green: #b0ffba;
+$color-blue: #f1f1f1;
 
 body {
     padding: 0;
@@ -127,6 +128,7 @@ p {
     width: 100%;
     padding: 16px 32px 16px 32px;
     justify-content: center;
+    text-align: center;
     & p {
         text-align: center;
         width: 100%;
@@ -149,8 +151,8 @@ p {
 }
 
 .ongoing {
-    background: $color-pink;
-    color: white;
+    background: $color-blue;
+    color: $color-dark-80;
 }
 
 .completed {
@@ -166,7 +168,7 @@ p {
 }
 
 .work {
-    color: $color-dark-80 !important;
+    color: $color-orange;
 }
 
 .none {
@@ -184,4 +186,9 @@ p {
 
 .f-direction-column {
     flex-direction: column;
+}
+
+// Responsive
+.resp-button {
+    display: none;
 }
