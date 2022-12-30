@@ -23,4 +23,30 @@
   .logout {
     margin-bottom: 32px;
   }
+  .misc {
+    & span {
+      margin-right: 8px;
+      font-size: 16px;
+      &.category {
+        font-size: 10px;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+  .itemtitle {
+    font-size: 14px;
+    width: 85%;
+  }
+  .search {
+    margin-bottom: 16px;
+  }
+  .search, .addcategory, .addtask {
+    font-size: 16px;
+  }
+  .addcategory {
+    width: 100%;
+    margin-bottom: 16px;
+  }
 }
