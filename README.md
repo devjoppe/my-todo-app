@@ -1,10 +1,10 @@
-# My todo app 👋
+# My todo app 🗒️
 
-Solution URL: https://devjoppe.github.io/my-todo-app/
+Solution URL: https://www.jotto.dev/project/my-todo/
 
 ![](./src/assets/images/printscreen.png)
 
-## Sprint 1 - WIP 2022-12 [DONE]
+## Sprint 1 - WIP 2022-12 [DONE] 👏
 
 ✅ Adding Firebase as database
 
