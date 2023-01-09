@@ -1,5 +1,10 @@
 # My todo app 🗒️
 
+## Sprint 2 - WIP 2023-01 [WIP]
+
+- Using Firebase Auth
+- New login screen
+
 Solution URL: https://www.jotto.dev/project/my-todo/
 
 ![](./src/assets/images/printscreen.png)
