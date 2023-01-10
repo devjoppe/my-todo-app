@@ -33,14 +33,18 @@ import {
     onAuthStateChanged
 } from 'firebase/auth'
 
+// Import "Views" and App functions
+import {loginForm, loginformDiv} from './assets/script/views/login'
+
 // API Config
 import {firebaseConfig} from "./assets/script/api/getapi"
 
 // Init API
 initializeApp(firebaseConfig)
 
-// Connect to database
+// Connect to database and services
 const db = getFirestore()
+const auth = getAuth()
 
 // Select collection in Firebase
 //  Collection
@@ -54,6 +58,30 @@ let todos: todosItem []
 let users: userItem []
 let userId: any
 let userName: string
+
+// Render Login box
+loginForm()
+
+// Login user
+const userForm = document.querySelector('#user') as HTMLFormElement
+userForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    const email = userForm.username.value
+    const password = userForm.password.value
+
+    signInWithEmailAndPassword(auth, email, password)
+        .then(cred => {
+            console.log("User logged in:", cred.user.uid)
+            userId = cred.user.uid
+            document.querySelector('.user-app')!.remove()
+            document.querySelector('.todo-app')!.classList.remove('hide')
+            renderTodos()
+        })
+        .catch(err => {
+            console.log(err.message)
+        })
+})
 
 // Fetch/update data from Firebase realtime
 onSnapshot(q, (snapshot) => {
@@ -70,6 +98,7 @@ onSnapshot(q, (snapshot) => {
     })
 })
 
+/*
 onSnapshot(qu, (snapshot)=> {
     users = []
     snapshot.docs.forEach(item => {
@@ -80,16 +109,17 @@ onSnapshot(qu, (snapshot)=> {
         })
     })
 })
+*/
 
 const todoList = document.querySelector('#todolist')!
 const completedList = document.querySelector('#completedlist')!
 const searchForm = document.querySelector('#search') as HTMLFormElement
-const userForm = document.querySelector('#user') as HTMLFormElement
 const darkBg = document.querySelector('.existing-container') as HTMLDivElement
 
 // Hide the container
 document.querySelector('.todo-app')!.classList.add('hide')
 
+/* TODO: Delete this one when the auth code is complete
 // Check user email to the database
 userForm.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -113,6 +143,7 @@ const headsUp = () => {
     headsUpMsg.classList.remove('hide')
     darkBg.classList.remove('hide')
 }
+
 headsUpMsg.addEventListener('click', (e) => {
     const target = e.target as HTMLButtonElement
     if(target.tagName === 'BUTTON') {
@@ -141,6 +172,8 @@ const newUser = (mail:string, name:string) => {
         )
     })
 }
+
+ */
 
 // Render todos
 const renderTodos = () => {
