@@ -24,6 +24,15 @@ import {
     getDoc
     } from 'firebase/firestore'
 
+// User Authentication
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+} from 'firebase/auth'
+
 // API Config
 import {firebaseConfig} from "./assets/script/api/getapi"
 
