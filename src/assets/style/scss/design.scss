@@ -11,6 +11,13 @@
     width: fit-content;
 }
 
+.createuser {
+    color: #FF577F;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 32px;
+}
+
 //Search and user component
 input[type=text], input[type=email] {
     font-family: config.$primary-font;
@@ -80,7 +87,7 @@ select {
     align-items: center;
     flex-direction: column;
     width: 100%;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
     padding: 0 10% 0 10%;
 }
 

@@ -36,6 +36,10 @@ h2 {
     margin-bottom: 8px;
 }
 
+h3 {
+    margin-bottom: 8px;
+}
+
 a {
     text-decoration: none;
     color: $color-pink;
@@ -132,6 +136,19 @@ p {
     & p {
         text-align: center;
         width: 100%;
+    }
+}
+
+.default-box {
+    @include box;
+    flex-direction: column;
+    background: #f6f6f6;
+    padding: 24px;
+    margin-bottom: 16px;
+    p {
+        text-align: left;
+        margin-bottom: 4px;
+        color: #6e6e6e
     }
 }
 
