@@ -6,6 +6,9 @@ import {
     userItem
     } from "./assets/script/interfaces"
 
+// Modules
+import { togglePopup, popUpContainer, closeUserLogin } from "./assets/script/modules/modules";
+
 // Firebase Imports: getFirestore, collection and getDocs
 import {initializeApp} from 'firebase/app'
 import {
@@ -33,9 +36,6 @@ import {
     onAuthStateChanged
 } from 'firebase/auth'
 
-// Import "Views" and App functions
-import {loginForm, loginformDiv} from './assets/script/views/login'
-
 // API Config
 import {firebaseConfig} from "./assets/script/api/getapi"
 
@@ -55,14 +55,25 @@ const q = query(colRef, orderBy('created', 'desc'))
 const qu = query(userRef)
 
 let todos: todosItem []
-let users: userItem []
+let users: userItem [] // TODO: Maybe delete this one?
 let userId: any
 let userName: string
 
 // Render Login box
-loginForm()
+const loginFormDiv = document.querySelector('#loginform') as HTMLDivElement
+const userLogin = () => {
+    loginFormDiv.innerHTML = `
+        <form id="user" class="userform">
+          <input id="username" class="username" type="email" name="username" placeholder="Email" required>
+          <input id="password" class="password" type="password" name="password" placeholder="Password" required>
+          <button class="welcome">Login! <span class="material-symbols-outlined">login</span></button>
+        </form>
+    `
+}
 
-// Login user
+userLogin()
+
+// Authenticate user with Firebase
 const userForm = document.querySelector('#user') as HTMLFormElement
 userForm.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -74,14 +85,78 @@ userForm.addEventListener('submit', (e) => {
         .then(cred => {
             console.log("User logged in:", cred.user.uid)
             userId = cred.user.uid
-            document.querySelector('.user-app')!.remove()
-            document.querySelector('.todo-app')!.classList.remove('hide')
+            closeUserLogin()
             renderTodos()
         })
         .catch(err => {
             console.log(err.message)
         })
 })
+
+// Render Create new user
+const createNewUser = document.querySelector('.createuser') as HTMLSpanElement
+
+createNewUser.addEventListener('click', () => {
+    togglePopup()
+    popUpContainer.innerHTML = `
+        <!-- Start: Create new user -->
+        <div class="user-box">
+            <!-- Create new user form -->
+            <h2>Create new user &#128075;</h2>
+            <form id="createnewuser" class="createnewuser">
+                <p>Enter the follwing information</p>
+                <input id="create-username" class="username" type="email" name="createusername" placeholder="Email" required>
+                <input id="create-name" class="username" type="text" name="createname" placeholder="Your name" required>
+                <input id="create-password" class="username" type="password" name="createpassword" placeholder="Password" required>
+                <div class="button-bar">
+                    <button id="createbutton" type="submit" class="create-button">Create user</button>
+                    <button id="createuser-cancel" type="button" class="cancel">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <!-- End: Create new user -->
+    `
+    // Create new user: form data input
+    const newUserForm = document.querySelector('#createnewuser') as HTMLFormElement
+
+    newUserForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        const userCredentials = {
+            email: newUserForm.createusername.value,
+            name: newUserForm.createname.value,
+            password: newUserForm.createpassword.value
+        }
+        saveUser(userCredentials)
+    })
+
+    // Close the form for creating new user
+    const cancelButton = document.querySelector('#createuser-cancel') as HTMLButtonElement
+    cancelButton.addEventListener('click', () => {
+        togglePopup()
+        popUpContainer.innerHTML = ``
+    })
+})
+
+// Save New user data to Firebase
+const saveUser = (credentials:any) => {
+    createUserWithEmailAndPassword(auth, credentials.email, credentials.password)
+        .then(cred => {
+            addDoc(userRef, {
+                name: credentials.name,
+                userid: cred.user.uid
+            })
+                .then(() => {
+                    togglePopup()
+                    popUpContainer.innerHTML = ``
+                    userId = cred.user.uid
+                    closeUserLogin()
+                    renderTodos()
+                })
+        })
+        .catch(err => {
+            console.log(err.message)
+        })
+}
 
 // Fetch/update data from Firebase realtime
 onSnapshot(q, (snapshot) => {

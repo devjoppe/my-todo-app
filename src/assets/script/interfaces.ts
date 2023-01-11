@@ -8,7 +8,6 @@ export interface todosItem {
 }
 
 export interface userItem {
-    username: string,
-    email: string,
-    id: any
+    name: string,
+    userid: any
 }

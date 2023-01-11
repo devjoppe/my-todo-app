@@ -7,15 +7,25 @@
     justify-content: center;
 }
 
-.close-box {
-    width: fit-content;
-}
-
 .createuser {
     color: #FF577F;
     font-weight: bold;
     text-align: center;
     margin-bottom: 32px;
+}
+
+.createnewuser {
+    .button-bar {
+        display: flex;
+        button {
+            width: 100%;
+            margin-right: 8px;
+            &:last-child {
+                margin-right: 0;
+                margin-left: 8px;
+            }
+        }
+    }
 }
 
 //Search and user component
