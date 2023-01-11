@@ -183,19 +183,6 @@ onSnapshot(q, (snapshot) => {
     })
 })
 
-/*
-onSnapshot(qu, (snapshot)=> {
-    users = []
-    snapshot.docs.forEach(item => {
-        users.push({
-            username: item.data().username,
-            email: item.data().email,
-            id: item.id
-        })
-    })
-})
-*/
-
 const todoList = document.querySelector('#todolist')!
 const completedList = document.querySelector('#completedlist')!
 const searchForm = document.querySelector('#search') as HTMLFormElement
@@ -203,62 +190,6 @@ const darkBg = document.querySelector('.existing-container') as HTMLDivElement
 
 // Hide the container
 document.querySelector('.todo-app')!.classList.add('hide')
-
-/* TODO: Delete this one when the auth code is complete
-// Check user email to the database
-userForm.addEventListener('submit', (e) => {
-    e.preventDefault()
-    const userMail: string = userForm.useremail.value
-    userName = userForm.username.value
-
-    const isUser = users.filter(user => user.email === userMail).map(item => item.id).join('')
-    userId = isUser
-
-    setTodo(userId)
-
-    document.querySelector('.user-app')!.classList.add('hide')
-    document.querySelector('.todo-app')!.classList.remove('hide')
-
-    isUser ? headsUp() : newUser(userMail, userName)
-})
-
-// Heads up -> existing user
-const headsUpMsg = document.querySelector('.user-box')!
-const headsUp = () => {
-    headsUpMsg.classList.remove('hide')
-    darkBg.classList.remove('hide')
-}
-
-headsUpMsg.addEventListener('click', (e) => {
-    const target = e.target as HTMLButtonElement
-    if(target.tagName === 'BUTTON') {
-        headsUpMsg.classList.add('hide')
-        darkBg.classList.add('hide')
-        renderTodos()
-    }
-})
-
-// New user, save user data
-const newUser = (mail:string, name:string) => {
-    addDoc(userRef, {
-        username: name,
-        email: mail
-    })
-        .then(() => {
-            console.log("New user created")
-            const newUser = query(userRef, where("email", "==", mail))
-            getDocs(newUser)
-            .then(user => {
-                user.forEach(uId => {
-                    userId = uId.id
-                })
-                renderTodos()
-            }
-        )
-    })
-}
-
- */
 
 // Render todos
 const renderTodos = () => {
@@ -510,6 +441,7 @@ const resetHide = () => {
 }
 
 // Exit and remove user from database
+// TODO: This needs to be rewriten with new functions.
 document.querySelector('.logout')!.addEventListener('click', () => {
     console.log("Exit and remove user")
     let docQuery = query(colRef, where('userid', '==', userId))
