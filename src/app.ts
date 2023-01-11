@@ -85,8 +85,18 @@ userForm.addEventListener('submit', (e) => {
         .then(cred => {
             console.log("User logged in:", cred.user.uid)
             userId = cred.user.uid
-            closeUserLogin()
-            renderTodos()
+            // Set Name from user
+            const getUser = query(userRef, where("userid", "==", userId))
+            getDocs(getUser)
+                .then(user => {
+                    user.forEach(user => {
+                        userName = String(user.data().name)
+                        console.log("User name GETDocs: ", userName)
+                    })
+                    // Start Todos
+                    closeUserLogin()
+                    renderTodos()
+                })
         })
         .catch(err => {
             console.log(err.message)
@@ -253,6 +263,7 @@ const newUser = (mail:string, name:string) => {
 // Render todos
 const renderTodos = () => {
     console.log("Render todos")
+    console.log("Username: ", userName)
     document.querySelector('#usertitle')!.innerHTML = `${userName} Todos &#x1F4C3;`
     document.querySelector('#uid')!.setAttribute('value', userId)
     todoList.innerHTML = todos.filter(item => !item.completed && item.userid === userId).map(item => {
