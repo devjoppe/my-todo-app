@@ -86,17 +86,10 @@ const userLogin = () => {
             .then(cred => {
                 userId = cred.user.uid
                 user = cred.user
+                console.log("Does something happen here. Default login")
                 // Set Name from user
-                const getUser = query(userRef, where("userid", "==", userId))
-                getDocs(getUser)
-                    .then(user => {
-                        user.forEach(user => {
-                            userName = String(user.data().name)
-                        })
-                        // Start Todos
-                        closeUserLogin()
-                        renderTodos()
-                    })
+                getUserAccount(userId)
+                closeUserLogin()
             })
             .catch(err => {
                 console.log(err.message)
@@ -105,6 +98,25 @@ const userLogin = () => {
 }
 
 userLogin()
+
+// TODO: A Main function where I set the ID from the Auth.current user and then Call it when I need it.
+// Get the user account information
+const getUserAccount = (id:any) => {
+    console.log("GetUserAccount")
+    console.log("Get user name????", id)
+    const getUser = query(userRef, where("userid", "==", id))
+    getDocs(getUser)
+        .then(user => {
+            user.forEach(user => {
+                console.log("When does this prints out?", user.data().name)
+                userName = String(user.data().name)
+            })
+            renderTodos() // Main render todos when the App starts
+        })
+        .catch(err => {
+            console.log(err.message)
+        })
+}
 
 // Render Create new user
 const createNewUser = document.querySelector('.createuser') as HTMLSpanElement
@@ -163,6 +175,7 @@ const saveUser = (credentials:any) => {
                     userId = cred.user.uid
                     user = cred.user
                     closeUserLogin()
+                    console.log("Saves user -> Then renderTodos")
                     renderTodos()
                 })
         })
@@ -203,16 +216,15 @@ onAuthStateChanged(auth, (user) => {
             })
         })
         console.log("Pushing todos: ", todos)
+        console.log(user.uid)
+        userId = user.uid
+        getUserAccount(userId) // Get the account info. Add more info in the future.
         closeUserLogin()
-        renderTodos()
     })
     } else {
         console.log("No user logged in")
     }
 })
-
-// TODO: A Main function where I set the ID from the Auth.current user and then Call it when I need it.
-
 
 const todoList = document.querySelector('#todolist')!
 const completedList = document.querySelector('#completedlist')!
@@ -245,10 +257,10 @@ const userSettings = () => {
 
 // Render todos
 const renderTodos = () => {
+    console.log("Render todos")
     console.log("Render Todos user (current user): ", auth.currentUser)
-    console.log("Check user: ", user)
+    console.log("Check user: ", userName)
     console.log("Reading Todos: ", todos)
-    //document.querySelector('#usertitle')!.innerHTML = `${userName} Todos &#x1F4C3;`
     document.querySelector('#uid')!.setAttribute('value', userId)
     todoList.innerHTML = todos.filter(item => !item.completed && item.userid === userId).map(item => {
         return `<div class="listitem ongoing" data-title="${item.todo}" data-category="${item.category}" data-itemid="${item.id}">
