@@ -45,9 +45,10 @@ initializeApp(firebaseConfig)
 // Connect to database and services
 const db = getFirestore()
 const auth = getAuth()
+let user: any
 
 // Select collection in Firebase
-//  Collection
+// Collection
 const colRef = collection(db, 'todos')
 const userRef = collection(db, 'user')
 // Query
@@ -55,13 +56,13 @@ const q = query(colRef, orderBy('created', 'desc'))
 const qu = query(userRef)
 
 let todos: todosItem []
-let users: userItem [] // TODO: Maybe delete this one?
+// let users: userItem [] // TODO: Maybe delete this one?
 let userId: any
 let userName: string
 
 // Render Login box
-const loginFormDiv = document.querySelector('#loginform') as HTMLDivElement
 const userLogin = () => {
+    const loginFormDiv = document.querySelector('#loginform') as HTMLDivElement
     loginFormDiv.innerHTML = `
         <form id="user" class="userform">
           <input id="username" class="username" type="email" name="username" placeholder="Email" required>
@@ -69,43 +70,41 @@ const userLogin = () => {
           <button class="welcome">Login! <span class="material-symbols-outlined">login</span></button>
         </form>
     `
+
+    // Authenticate user with Firebase
+     const userForm = document.querySelector('#user') as HTMLFormElement
+    userForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+
+        const email = userForm.username.value
+        const password = userForm.password.value
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then(cred => {
+                userId = cred.user.uid
+                user = cred.user
+                // Set Name from user
+                const getUser = query(userRef, where("userid", "==", userId))
+                getDocs(getUser)
+                    .then(user => {
+                        user.forEach(user => {
+                            userName = String(user.data().name)
+                        })
+                        // Start Todos
+                        closeUserLogin()
+                        renderTodos()
+                    })
+            })
+            .catch(err => {
+                console.log(err.message)
+            })
+    })
 }
 
 userLogin()
 
-// Authenticate user with Firebase
-const userForm = document.querySelector('#user') as HTMLFormElement
-userForm.addEventListener('submit', (e) => {
-    e.preventDefault()
-
-    const email = userForm.username.value
-    const password = userForm.password.value
-
-    signInWithEmailAndPassword(auth, email, password)
-        .then(cred => {
-            console.log("User logged in:", cred.user.uid)
-            userId = cred.user.uid
-            // Set Name from user
-            const getUser = query(userRef, where("userid", "==", userId))
-            getDocs(getUser)
-                .then(user => {
-                    user.forEach(user => {
-                        userName = String(user.data().name)
-                        console.log("User name GETDocs: ", userName)
-                    })
-                    // Start Todos
-                    closeUserLogin()
-                    renderTodos()
-                })
-        })
-        .catch(err => {
-            console.log(err.message)
-        })
-})
-
 // Render Create new user
 const createNewUser = document.querySelector('.createuser') as HTMLSpanElement
-
 createNewUser.addEventListener('click', () => {
     togglePopup()
     popUpContainer.innerHTML = `
@@ -128,7 +127,6 @@ createNewUser.addEventListener('click', () => {
     `
     // Create new user: form data input
     const newUserForm = document.querySelector('#createnewuser') as HTMLFormElement
-
     newUserForm.addEventListener('submit', (e) => {
         e.preventDefault()
         const userCredentials = {
@@ -136,6 +134,7 @@ createNewUser.addEventListener('click', () => {
             name: newUserForm.createname.value,
             password: newUserForm.createpassword.value
         }
+        userName = newUserForm.createname.value
         saveUser(userCredentials)
     })
 
@@ -159,6 +158,7 @@ const saveUser = (credentials:any) => {
                     togglePopup()
                     popUpContainer.innerHTML = ``
                     userId = cred.user.uid
+                    user = cred.user
                     closeUserLogin()
                     renderTodos()
                 })
@@ -193,45 +193,51 @@ document.querySelector('.todo-app')!.classList.add('hide')
 
 // Render todos
 const renderTodos = () => {
-    console.log("Render todos")
-    console.log("Username: ", userName)
-    document.querySelector('#usertitle')!.innerHTML = `${userName} Todos &#x1F4C3;`
-    document.querySelector('#uid')!.setAttribute('value', userId)
-    todoList.innerHTML = todos.filter(item => !item.completed && item.userid === userId).map(item => {
-        return `<div class="listitem ongoing" data-title="${item.todo}" data-category="${item.category}" data-itemid="${item.id}">
-            <div class="itemcontent">
-                <div class="check">
-                    <span class="material-symbols-outlined" data-user="${item.userid}" data-done="${item.id}">done</span>
+    if (user) {
+        document.querySelector('#usertitle')!.innerHTML = `${userName} Todos &#x1F4C3;`
+        document.querySelector('#uid')!.setAttribute('value', userId)
+        todoList.innerHTML = todos.filter(item => !item.completed && item.userid === userId).map(item => {
+            return `<div class="listitem ongoing" data-title="${item.todo}" data-category="${item.category}" data-itemid="${item.id}">
+                <div class="itemcontent">
+                    <div class="check">
+                        <span class="material-symbols-outlined" data-user="${item.userid}" data-done="${item.id}">done</span>
+                    </div>
+                    <span class="itemtitle">${item.todo}</span>
                 </div>
-                <span class="itemtitle">${item.todo}</span>
-            </div>
-            <div class="misc">
-                <span class="category ${item.category}">${item.category}</span>
-                <span class="material-symbols-outlined pen" data-edit="${item.id}">edit</span>
-                <span class="material-symbols-outlined trash" data-user="${item.userid}" data-delete="${item.id}">delete</span>
-            </div>
-        </div>`
-    }).join("")
-    if(!todoList.innerHTML) {
-        todoList.innerHTML = `You have nothing todo &#x1F62E;`
+                <div class="misc">
+                    <span class="category ${item.category}">${item.category}</span>
+                    <span class="material-symbols-outlined pen" data-edit="${item.id}">edit</span>
+                    <span class="material-symbols-outlined trash" data-user="${item.userid}" data-delete="${item.id}">delete</span>
+                </div>
+            </div>`
+        }).join("")
+        if(!todoList.innerHTML) {
+            todoList.innerHTML = `You have nothing todo &#x1F62E;`
+        }
+        setTodo(userId) // Updates the user todos array
+        completedRender()
+    } else {
+        console.log("Not logged in!")
     }
-    setTodo(userId) // Updates the user todos array
-    completedRender()
 }
 
 // Render todos completed
 const completedRender = () => {
-    completedList.innerHTML = todos.filter(item => item.completed && item.userid === userId).map(item => `
-        <div class="listitem completed" data-title="${item.todo}">
-            <span class="itemtitle">${item.todo}</span>
-            <div class="misc">
-                <span class="category ${item.category}">${item.category}</span>
-                <span class="material-symbols-outlined trash" data-user="${item.userid}" data-delete="${item.id}">delete</span>
+    if(user) {
+        completedList.innerHTML = todos.filter(item => item.completed && item.userid === userId).map(item => `
+            <div class="listitem completed" data-title="${item.todo}">
+                <span class="itemtitle">${item.todo}</span>
+                <div class="misc">
+                    <span class="category ${item.category}">${item.category}</span>
+                    <span class="material-symbols-outlined trash" data-user="${item.userid}" data-delete="${item.id}">delete</span>
+                </div>
             </div>
-        </div>
-    `).join("")
-    if(!completedList.innerHTML) {
-        completedList.innerHTML = `Zero completed &#128564;`
+        `).join("")
+        if(!completedList.innerHTML) {
+            completedList.innerHTML = `Zero completed &#128564;`
+        }
+    } else {
+        console.log("Not logged in")
     }
 }
 
@@ -337,34 +343,40 @@ completedList.addEventListener('click', (e) => {
 })
 
 // Delete message
-const deleteBox = document.querySelector('.delete-box') as HTMLDivElement
+//const deleteBox = document.querySelector('.delete-box') as HTMLDivElement
 const deleteMsg = (targetId:any) => {
     const docRef = doc(db, 'todos', targetId)
     let docData:any
     getDoc(docRef)
         .then(docItem => {
             docData = docItem.data()
-            deleteBox.classList.remove('hide')
-            darkBg.classList.remove('hide')
-            deleteBox.innerHTML = `
-            <h2>Delete? &#128543;</h2>
-            <span>
-                Are you sure you want to delete?<br>
-                <strong>${docData.todo}</strong>
-            </span>
-            <div class="delete-buttons">
-                <button data-id="${docItem.id}" data-action="delete">Yes please</button>
-                <button class="cancel" data-action="cancel" >No way!</button>
+            //deleteBox.classList.remove('hide')
+            //darkBg.classList.remove('hide')
+            togglePopup()
+            popUpContainer.innerHTML = `
+            <div class="delete-box">
+                <h2>Delete? &#128543;</h2>
+                <span>
+                    Are you sure you want to delete?<br>
+                    <strong>${docData.todo}</strong>
+                </span>
+                <div class="delete-buttons">
+                    <button data-id="${docItem.id}" data-action="delete">Yes please</button>
+                    <button class="cancel" data-action="cancel" >No way!</button>
+                </div>
             </div>`
         })
 }
 
 // Delete check
-deleteBox.addEventListener('click', (e:any) => {
+//const deleteBox = document.querySelector('.delete-box') as HTMLDivElement
+popUpContainer.addEventListener('click', (e:any) => {
     const target = e.target as HTMLElement
-    darkBg.classList.add('hide')
-    deleteBox.classList.add('hide')
-    if(target.tagName === 'BUTTON') {
+    /* darkBg.classList.add('hide')
+    deleteBox.classList.add('hide') */
+    if(target.tagName === 'BUTTON' && target.dataset.action) {
+        togglePopup()
+        popUpContainer.innerHTML = ``
         if(target.dataset.action === 'cancel') {
             renderTodos()
         } else if(target.dataset.action === 'delete' && target.dataset.id) {
@@ -386,7 +398,7 @@ const deleteTodos = (targetId:string) => {
 let userTodos: any [] = []
 const setTodo = (userId: any) => {
     userTodos = todos.filter(item => userId.includes(item.userid))
-    console.log("Set new Array for user todos", userTodos)
+    //console.log("Set new Array for user todos", userTodos)
 }
 
 // Search function
@@ -406,13 +418,10 @@ searchForm.addEventListener('submit', (e) => {
 
 // Search tasks function
 const filterTasks = (searchKey: string) => {
-    console.log("Filter todos")
-    console.log(searchKey)
     let noFilter:boolean = false
     const filterText = document.querySelector('#nofilter') as HTMLSpanElement ?? ''
     const taskItem = document.querySelectorAll('.listitem')
     taskItem.forEach(item => {
-        console.log(noFilter)
         if(item.classList.contains('hide') && !noFilter) {
             filterText.classList.remove('hide')
         }
@@ -421,7 +430,6 @@ const filterTasks = (searchKey: string) => {
         }
     })
     const searchQuery = userTodos.filter((item: any) => item.todo.toLowerCase().trim().includes(searchKey))
-    console.log(userTodos)
     searchQuery.forEach(item => {
         const searchedItem = document.querySelector('[data-title="' + item.todo + '"]') as HTMLDivElement
         if(!item.completed && searchedItem.classList.contains('hide')) {
@@ -442,7 +450,7 @@ const resetHide = () => {
 
 // Exit and remove user from database
 // TODO: This needs to be rewriten with new functions.
-document.querySelector('.logout')!.addEventListener('click', () => {
+/*document.querySelector('.logout')!.addEventListener('click', () => {
     console.log("Exit and remove user")
     let docQuery = query(colRef, where('userid', '==', userId))
     getDocs(docQuery)
@@ -462,4 +470,4 @@ document.querySelector('.logout')!.addEventListener('click', () => {
                     })
             })
         })
-})
+}) */
