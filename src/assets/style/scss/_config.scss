@@ -9,7 +9,7 @@ $color-orange: #FF884B;
 $color-light-orange: #FFD384;
 $color-yellow: #FFF9B0;
 $color-dark: rgb(32, 32, 32);
-$color-dark-80: rgb(58, 58, 58);
+$color-dark-80: rgb(52, 52, 52);
 $color-green: #b0ffba;
 $color-blue: #f1f1f1;
 
@@ -85,6 +85,11 @@ p {
     box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
 }
 
+.todo-app {
+    flex-direction: column;
+    padding: 0 !important;
+}
+
 .user-box {
     @include pop-ups;
     display: flex;
@@ -153,7 +158,9 @@ p {
 }
 
 .inner-content {
+    box-sizing: border-box;
     width: 100%;
+    padding: 32px;
 }
 
 .existing-container {

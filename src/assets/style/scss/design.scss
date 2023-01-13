@@ -28,6 +28,40 @@
     }
 }
 
+// Header settings
+.user-settings {
+    display: flex;
+    background: whitesmoke;
+    border-radius: 16px 16px 0 0;
+    box-sizing: border-box;
+    padding: 16px;
+    align-items: center;
+    justify-content: space-between;
+    > .settings {
+        display: flex;
+        align-items: center;
+        span {
+            background: config.$color-pink;
+            color: white;
+            padding: 8px;
+            border-radius: 50%;
+            font-size: 24px;
+            margin-right: 8px;
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+    > .logged-user {
+        display: flex;
+        align-items: center;
+        span {
+            font-size: 42px;
+            margin-right: 8px;
+        }
+    }
+}
+
 //Search and user component
 input[type=text], input[type=email] {
     font-family: config.$primary-font;
@@ -193,19 +227,10 @@ button {
     display: flex;
 }
 
-// Header and logout
+// Header and Logout
 .title-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-}
-
-.logout {
-    color: config.$color-pink;
-    margin-bottom: 16px;
-    cursor: pointer;
-    &:hover {
-        text-decoration: underline;
-    }
 }

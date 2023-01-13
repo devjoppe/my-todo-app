@@ -6,7 +6,7 @@ import {
     userItem
     } from "./assets/script/interfaces"
 
-// Modules
+// Modules - Just for testing some ideas
 import { togglePopup, popUpContainer, closeUserLogin } from "./assets/script/modules/modules";
 
 // Firebase Imports: getFirestore, collection and getDocs
@@ -51,9 +51,10 @@ let user: any
 // Collection
 const colRef = collection(db, 'todos')
 const userRef = collection(db, 'user')
+
 // Query
 const q = query(colRef, orderBy('created', 'desc'))
-const qu = query(userRef)
+const qu = query(userRef) // TODO: Maybe delete this one as well.
 
 let todos: todosItem []
 // let users: userItem [] // TODO: Maybe delete this one?
@@ -62,6 +63,8 @@ let userName: string
 
 // Render Login box
 const userLogin = () => {
+    console.log(auth)
+    console.log("Does this one fire?")
     const loginFormDiv = document.querySelector('#loginform') as HTMLDivElement
     loginFormDiv.innerHTML = `
         <form id="user" class="userform">
@@ -72,7 +75,7 @@ const userLogin = () => {
     `
 
     // Authenticate user with Firebase
-     const userForm = document.querySelector('#user') as HTMLFormElement
+    const userForm = document.querySelector('#user') as HTMLFormElement
     userForm.addEventListener('submit', (e) => {
         e.preventDefault()
 
@@ -168,20 +171,48 @@ const saveUser = (credentials:any) => {
         })
 }
 
-// Fetch/update data from Firebase realtime
-onSnapshot(q, (snapshot) => {
-    todos = []
-    snapshot.docs.forEach(item => {
-        todos.push({
-            id: item.id,
-            todo: item.data().todo,
-            completed: item.data().completed,
-            category: item.data().category,
-            created: serverTimestamp(),
-            userid: item.data().userid
+// Logout user
+const logoutUser = () => {
+    console.log("Logging out")
+    signOut(auth)
+        .then(() => {
+            console.log("User signed out")
+            // Maybe a sign out thing message
+            document.querySelector('.container-center')!.innerHTML = ``
         })
+        .catch(err => {
+            console.log(err.message)
+        })
+}
+
+// Fetch/update data from Firebase realtime
+// And Check if the user is signed in.
+onAuthStateChanged(auth, (user) => {
+    console.log("Inside user check")
+    if(user) {
+    onSnapshot(q, (snapshot) => {
+        todos = []
+        snapshot.docs.forEach(item => {
+            todos.push({
+                id: item.id,
+                todo: item.data().todo,
+                completed: item.data().completed,
+                category: item.data().category,
+                created: serverTimestamp(),
+                userid: item.data().userid
+            })
+        })
+        console.log("Pushing todos: ", todos)
+        closeUserLogin()
+        renderTodos()
     })
+    } else {
+        console.log("No user logged in")
+    }
 })
+
+// TODO: A Main function where I set the ID from the Auth.current user and then Call it when I need it.
+
 
 const todoList = document.querySelector('#todolist')!
 const completedList = document.querySelector('#completedlist')!
@@ -191,53 +222,70 @@ const darkBg = document.querySelector('.existing-container') as HTMLDivElement
 // Hide the container
 document.querySelector('.todo-app')!.classList.add('hide')
 
+// Render user settings
+const userSettings = () => {
+    console.log("Renderar du?")
+    document.querySelector('.user-settings')!.innerHTML = `
+        <div class="logged-user">
+            <span class="material-symbols-outlined">person</span>
+            <div class="user-info">
+                <strong>Logged in as: </strong><br>
+                ${userName}
+            </div>
+        </div>
+        <div class="settings">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="material-symbols-outlined logout">logout</span>
+        </div>
+    `
+    document.querySelector('.logout')!.addEventListener('click', () => {
+        logoutUser()
+    })
+}
+
 // Render todos
 const renderTodos = () => {
-    if (user) {
-        document.querySelector('#usertitle')!.innerHTML = `${userName} Todos &#x1F4C3;`
-        document.querySelector('#uid')!.setAttribute('value', userId)
-        todoList.innerHTML = todos.filter(item => !item.completed && item.userid === userId).map(item => {
-            return `<div class="listitem ongoing" data-title="${item.todo}" data-category="${item.category}" data-itemid="${item.id}">
-                <div class="itemcontent">
-                    <div class="check">
-                        <span class="material-symbols-outlined" data-user="${item.userid}" data-done="${item.id}">done</span>
-                    </div>
-                    <span class="itemtitle">${item.todo}</span>
+    console.log("Render Todos user (current user): ", auth.currentUser)
+    console.log("Check user: ", user)
+    console.log("Reading Todos: ", todos)
+    //document.querySelector('#usertitle')!.innerHTML = `${userName} Todos &#x1F4C3;`
+    document.querySelector('#uid')!.setAttribute('value', userId)
+    todoList.innerHTML = todos.filter(item => !item.completed && item.userid === userId).map(item => {
+        return `<div class="listitem ongoing" data-title="${item.todo}" data-category="${item.category}" data-itemid="${item.id}">
+            <div class="itemcontent">
+                <div class="check">
+                    <span class="material-symbols-outlined" data-user="${item.userid}" data-done="${item.id}">done</span>
                 </div>
-                <div class="misc">
-                    <span class="category ${item.category}">${item.category}</span>
-                    <span class="material-symbols-outlined pen" data-edit="${item.id}">edit</span>
-                    <span class="material-symbols-outlined trash" data-user="${item.userid}" data-delete="${item.id}">delete</span>
-                </div>
-            </div>`
-        }).join("")
-        if(!todoList.innerHTML) {
-            todoList.innerHTML = `You have nothing todo &#x1F62E;`
-        }
-        setTodo(userId) // Updates the user todos array
-        completedRender()
-    } else {
-        console.log("Not logged in!")
+                <span class="itemtitle">${item.todo}</span>
+            </div>
+            <div class="misc">
+                <span class="category ${item.category}">${item.category}</span>
+                <span class="material-symbols-outlined pen" data-edit="${item.id}">edit</span>
+                <span class="material-symbols-outlined trash" data-user="${item.userid}" data-delete="${item.id}">delete</span>
+            </div>
+        </div>`
+    }).join("")
+    if(!todoList.innerHTML) {
+        todoList.innerHTML = `You have nothing todo &#x1F62E;`
     }
+    userSettings() // Render user settings field
+    setTodo(userId) // Updates the user todos array
+    completedRender()
 }
 
 // Render todos completed
 const completedRender = () => {
-    if(user) {
-        completedList.innerHTML = todos.filter(item => item.completed && item.userid === userId).map(item => `
-            <div class="listitem completed" data-title="${item.todo}">
-                <span class="itemtitle">${item.todo}</span>
-                <div class="misc">
-                    <span class="category ${item.category}">${item.category}</span>
-                    <span class="material-symbols-outlined trash" data-user="${item.userid}" data-delete="${item.id}">delete</span>
-                </div>
+    completedList.innerHTML = todos.filter(item => item.completed && item.userid === userId).map(item => `
+        <div class="listitem completed" data-title="${item.todo}">
+            <span class="itemtitle">${item.todo}</span>
+            <div class="misc">
+                <span class="category ${item.category}">${item.category}</span>
+                <span class="material-symbols-outlined trash" data-user="${item.userid}" data-delete="${item.id}">delete</span>
             </div>
-        `).join("")
-        if(!completedList.innerHTML) {
-            completedList.innerHTML = `Zero completed &#128564;`
-        }
-    } else {
-        console.log("Not logged in")
+        </div>
+    `).join("")
+    if(!completedList.innerHTML) {
+        completedList.innerHTML = `Zero completed &#128564;`
     }
 }
 
