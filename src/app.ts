@@ -184,6 +184,24 @@ const saveUser = (credentials:any) => {
         })
 }
 
+// Logout check
+const logoutCheck = () => {
+    togglePopup()
+    popUpContainer.innerHTML = `
+        <div class="logout-box">
+            <h2>Sign out?</h2>
+            <span>
+              Are you sure you want to sign out?  
+            </span>
+            <div class="box-buttons">
+                <button data-action="logout">Yes please</button>
+                <button class="cancel" data-action="cancel" >No way!</button>
+            </div>
+        </div>`
+
+
+}
+
 // Logout user
 const logoutUser = () => {
     console.log("Logging out")
@@ -241,7 +259,7 @@ const userSettings = () => {
         <div class="logged-user">
             <span class="material-symbols-outlined">person</span>
             <div class="user-info">
-                <strong>Logged in as: </strong><br>
+                <strong>Signed in as: </strong><br>
                 ${userName}
             </div>
         </div>
@@ -251,7 +269,7 @@ const userSettings = () => {
         </div>
     `
     document.querySelector('.logout')!.addEventListener('click', () => {
-        logoutUser()
+        logoutCheck()
     })
 }
 
@@ -315,7 +333,6 @@ todoForm.addEventListener('submit', (e) => {
     .then(() => {
         searchForm.reset()
         todoForm.reset()
-        renderTodos()
     })
 })
 
@@ -372,7 +389,8 @@ todoList.addEventListener('submit', (e) => {
             category: target.taskcategoryedit.value
         })
             .then(() =>
-                renderTodos()
+                //renderTodos()
+                console.log("#### Todo is updated ####")
             )
     }
 })
@@ -389,7 +407,8 @@ todoList.addEventListener('click', (e) => {
             completed: true
         })
         .then(() =>
-            renderTodos()
+            //renderTodos()
+            console.log("Todo deleted")
         )
     }
 })
@@ -420,7 +439,7 @@ const deleteMsg = (targetId:any) => {
                     Are you sure you want to delete?<br>
                     <strong>${docData.todo}</strong>
                 </span>
-                <div class="delete-buttons">
+                <div class="box-buttons">
                     <button data-id="${docItem.id}" data-action="delete">Yes please</button>
                     <button class="cancel" data-action="cancel" >No way!</button>
                 </div>
@@ -429,11 +448,8 @@ const deleteMsg = (targetId:any) => {
 }
 
 // Delete check
-//const deleteBox = document.querySelector('.delete-box') as HTMLDivElement
 popUpContainer.addEventListener('click', (e:any) => {
     const target = e.target as HTMLElement
-    /* darkBg.classList.add('hide')
-    deleteBox.classList.add('hide') */
     if(target.tagName === 'BUTTON' && target.dataset.action) {
         togglePopup()
         popUpContainer.innerHTML = ``
@@ -450,15 +466,16 @@ const deleteTodos = (targetId:string) => {
     const docRef = doc(db, 'todos', targetId)
     deleteDoc(docRef)
         .then(() =>
-            renderTodos()
+            //renderTodos()
+            console.log("Todo deleted, right?")
         )
 }
 
 // Set the todolist based on user
 let userTodos: any [] = []
 const setTodo = (userId: any) => {
+    console.log("Sets the TODO")
     userTodos = todos.filter(item => userId.includes(item.userid))
-    //console.log("Set new Array for user todos", userTodos)
 }
 
 // Search function

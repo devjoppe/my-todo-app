@@ -6,6 +6,14 @@ export const togglePopup = () => {
 }
 
 export const closeUserLogin = () => {
-    document.querySelector('.user-app')!.remove()
-    document.querySelector('.todo-app')!.classList.remove('hide')
+    const userAppEl = document.querySelector('.user-app')! as HTMLDivElement
+    if(userAppEl) {
+        userAppEl.remove()
+    }
+    const todoAppEl = document.querySelector('.todo-app')! as HTMLDivElement
+    if(todoAppEl.classList.contains('hide')) {
+        todoAppEl.classList.remove('hide')
+    } else {
+        console.log("NOTHING TO HIDE")
+    }
 }

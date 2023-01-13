@@ -30,8 +30,10 @@
 
 // Header settings
 .user-settings {
+    color: config.$color-dark-80;
     display: flex;
-    background: whitesmoke;
+    background: white;
+    border-bottom: 1px solid #ececec;
     border-radius: 16px 16px 0 0;
     box-sizing: border-box;
     padding: 16px;
