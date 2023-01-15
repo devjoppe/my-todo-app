@@ -44,7 +44,6 @@ initializeApp(firebaseConfig)
 // Connect to database and services
 const db = getFirestore()
 const auth = getAuth()
-let user:any
 
 // Select collection in Firebase
 // Collection
@@ -81,7 +80,7 @@ const userLogin = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then(cred => {
                 userId = cred.user.uid
-                user = cred.user
+                //user = cred.user
                 // Set Name from user
                 getUserAccount(userId)
                 closeUserLogin()
@@ -166,7 +165,7 @@ const saveUser = (credentials:any) => {
                     togglePopup()
                     popUpContainer.innerHTML = ``
                     userId = cred.user.uid
-                    user = cred.user
+                    //user = cred.user
                     closeUserLogin()
                     renderTodos()
                 })

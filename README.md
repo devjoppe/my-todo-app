@@ -1,13 +1,16 @@
 # My todo app 🗒️
 
-## Sprint 2 - WIP 2023-01 [WIP]
-
-- Using Firebase Auth
-- New login screen
-
 Solution URL: https://www.jotto.dev/project/my-todo/
 
-![](./src/assets/images/printscreen.png)
+Welcome to My Todo, a personal project and demo app that I designed and developed as a learning exercise. This app allows you to keep track of tasks and to-do items.
+
+![](./src/assets/images/printscreen-230115.png)
+
+## Sprint 2 - WIP 2023-01 [DONE] 👏
+
+✅ Using Firebase Auth
+
+✅ New login screen
 
 ## Sprint 1 - WIP 2022-12 [DONE] 👏
 
@@ -21,6 +24,7 @@ Solution URL: https://www.jotto.dev/project/my-todo/
 
 **A learning project to get more knowledge about:**
 
+* Using Auth in Firebase
 * Databases, API, CRUD
 * TypeScript
 * filter()
