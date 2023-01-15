@@ -12,6 +12,7 @@
     font-weight: bold;
     text-align: center;
     margin-bottom: 32px;
+    cursor: pointer;
 }
 
 .createnewuser {
@@ -96,7 +97,7 @@
 }
 
 //Search and user component
-input[type=text], input[type=email] {
+input[type=text], input[type=email], input[type=password] {
     font-family: config.$primary-font;
     &:focus {
         outline: none !important;
