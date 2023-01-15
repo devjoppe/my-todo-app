@@ -44,7 +44,7 @@ initializeApp(firebaseConfig)
 // Connect to database and services
 const db = getFirestore()
 const auth = getAuth()
-let user: any
+let user:any
 
 // Select collection in Firebase
 // Collection
@@ -53,10 +53,8 @@ const userRef = collection(db, 'user')
 
 // Query
 const q = query(colRef, orderBy('created', 'desc'))
-const qu = query(userRef) // TODO: Maybe delete this one as well.
 
 let todos: todosItem []
-// let users: userItem [] // TODO: Maybe delete this one?
 let userId: any
 let userName: string
 
@@ -178,7 +176,7 @@ const saveUser = (credentials:any) => {
         })
 }
 
-// Logout check
+// Logout check and check for deleting user
 const logoutCheck = () => {
     togglePopup()
     popUpContainer.innerHTML = `
@@ -192,8 +190,6 @@ const logoutCheck = () => {
                 <button class="cancel" data-action="cancel" >No way!</button>
             </div>
         </div>`
-
-
 }
 
 // Logout user
@@ -221,9 +217,6 @@ const settingsPanel = () => {
             <div class="settings-item" data-action="deleteUser">
                 Remove my user and all data
             </div>
-            <div class="settings-item" data-action="changeName">
-                Change my user name
-            </div>
         </div>
     `
     document.querySelector('.settings-close')!.addEventListener('click', () => {
@@ -234,7 +227,8 @@ const settingsPanel = () => {
     settingsPanelEl.addEventListener('click', (e) => {
         let target:any = e.target as HTMLDivElement
         if(target.dataset.action === 'deleteUser') {
-            deleteUserData()
+            console.log("deleteAccountCheck")
+            deleteAccountCheck()
         }
     })
 }
@@ -477,6 +471,9 @@ popUpContainer.addEventListener('click', (e:any) => {
             deleteTodos(target.dataset.id)
         } else if(target.dataset.action === 'logout') {
             logoutUser()
+        } else if(target.dataset.action === 'deleteaccount') {
+            console.log("Clicking the delete button")
+            deleteUserData()
         }
     }
 })
@@ -543,12 +540,30 @@ const resetHide = () => {
     })
 }
 
+// Check if the user wants to delete user account
+const deleteAccountCheck = () => {
+    console.log("Is this one working?")
+    togglePopup()
+    popUpContainer.innerHTML = `
+        <div class="account-box">
+            <h2>⚠️ Delete your account</h2>
+            <span>
+              Are you sure you want to delete your account?<br>
+              <br>
+              All user data and todos will be deleted.<br>  
+            </span>
+            <div class="box-buttons">
+                <button data-action="deleteaccount">Yes please</button>
+                <button class="cancel" data-action="cancel" >I´ve changed my mind!</button>
+            </div>
+        </div>`
+}
+
 // Deleting user with data, and account
 const deleteUserData = () => {
-    console.log(userId)
     let docQuery = query(colRef, where('userid', '==', userId))
     let userQuery = query(userRef, where('userid', '==', userId))
-    console.log(userQuery)
+    // Delete user documents
     getDocs(docQuery)
         .then(docItem => {
             docItem.forEach(docId => {
@@ -562,11 +577,10 @@ const deleteUserData = () => {
         .catch(err => {
             console.log(err.message)
         })
+    // Delete user data
     getDocs(userQuery)
         .then(userItem => {
             userItem.forEach(docId => {
-                console.log("Checking if it goes to the loop")
-                console.log(docId.id)
                 const userRef = doc(db, 'user', docId.id)
                 deleteDoc(userRef)
                     .then(()=> {
@@ -577,12 +591,13 @@ const deleteUserData = () => {
         .catch(err => {
             console.log(err.message)
         })
+    // Delete user account
     onAuthStateChanged(auth, (user) => {
         if (user) {
             user.delete()
                 .then(()=> {
-                    console.log("User account, ALL DELETED")
-                    //location.reload()
+                    console.log("Your Account has been deleted")
+                    location.reload()
                 })
                 .catch(err => {
                     console.log(err.message)
@@ -590,27 +605,3 @@ const deleteUserData = () => {
             }
     })
 }
-
-// Exit and remove user from database
-// TODO: This needs to be rewriten with new functions.
-/*document.querySelector('.logout')!.addEventListener('click', () => {
-    console.log("Exit and remove user")
-    let docQuery = query(colRef, where('userid', '==', userId))
-    getDocs(docQuery)
-        .then(docItem => {
-            docItem.forEach(docId => {
-              console.log(docId.id)
-                const docRef = doc(db, 'todos', docId.id)
-                const userRef = doc(db, 'user', userId)
-                deleteDoc(docRef)
-                    .then(() => {
-                        console.log("All todos deleted")
-                        deleteDoc(userRef)
-                            .then(() => {
-                                console.log("User deleted")
-                                window.location.reload()
-                            })
-                    })
-            })
-        })
-}) */

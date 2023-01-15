@@ -76,7 +76,7 @@ p {
     justify-content: center;
 }
 
-.todo-app, .user-app, .user-box, .delete-box, .logout-box {
+.todo-app, .user-app, .user-box, .delete-box, .logout-box, .account-box {
     @include box;
     margin: 32px;
     padding: 48px;
@@ -102,7 +102,7 @@ p {
     }
 }
 
-.delete-box, .logout-box {
+.delete-box, .logout-box, .account-box {
     @include pop-ups;
     flex-direction: column;
     justify-content: center;
@@ -118,6 +118,15 @@ p {
     width: 100%;
     justify-content: space-around;
     margin-top: 16px;
+}
+
+.account-box {
+    > .box-buttons {
+        flex-direction: column;
+        button {
+            margin-bottom: 8px;
+        }
+    }
 }
 
 .cancel {
