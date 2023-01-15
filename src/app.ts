@@ -3,7 +3,6 @@ import './assets/style/css/style.min.css'
 // Interfaces
 import {
     todosItem,
-    userItem
     } from "./assets/script/interfaces"
 
 // Modules - Just for testing some ideas
@@ -63,13 +62,12 @@ let userName: string
 
 // Render Login box
 const userLogin = () => {
-    console.log(auth)
-    console.log("Does this one fire?")
     const loginFormDiv = document.querySelector('#loginform') as HTMLDivElement
     loginFormDiv.innerHTML = `
         <form id="user" class="userform">
           <input id="username" class="username" type="email" name="username" placeholder="Email" required>
           <input id="password" class="password" type="password" name="password" placeholder="Password" required>
+          <div class="error-message hide"></div>
           <button class="welcome">Login! <span class="material-symbols-outlined">login</span></button>
         </form>
     `
@@ -86,29 +84,26 @@ const userLogin = () => {
             .then(cred => {
                 userId = cred.user.uid
                 user = cred.user
-                console.log("Does something happen here. Default login")
                 // Set Name from user
                 getUserAccount(userId)
                 closeUserLogin()
             })
             .catch(err => {
-                console.log(err.message)
+                const errorMessage = document.querySelector('.error-message') as HTMLDivElement
+                errorMessage.classList.remove('hide')
+                errorMessage.innerHTML = `${err.code}`
             })
     })
 }
 
 userLogin()
 
-// TODO: A Main function where I set the ID from the Auth.current user and then Call it when I need it.
 // Get the user account information
 const getUserAccount = (id:any) => {
-    console.log("GetUserAccount")
-    console.log("Get user name????", id)
     const getUser = query(userRef, where("userid", "==", id))
     getDocs(getUser)
         .then(user => {
             user.forEach(user => {
-                console.log("When does this prints out?", user.data().name)
                 userName = String(user.data().name)
             })
             renderTodos() // Main render todos when the App starts
@@ -175,7 +170,6 @@ const saveUser = (credentials:any) => {
                     userId = cred.user.uid
                     user = cred.user
                     closeUserLogin()
-                    console.log("Saves user -> Then renderTodos")
                     renderTodos()
                 })
         })
@@ -204,12 +198,10 @@ const logoutCheck = () => {
 
 // Logout user
 const logoutUser = () => {
-    console.log("Logging out")
+    console.log("Log out")
     signOut(auth)
         .then(() => {
-            console.log("User signed out")
-            // Maybe a sign out thing message
-            document.querySelector('.container-center')!.innerHTML = ``
+            location.reload()
         })
         .catch(err => {
             console.log(err.message)
@@ -219,7 +211,6 @@ const logoutUser = () => {
 // Fetch/update data from Firebase realtime
 // And Check if the user is signed in.
 onAuthStateChanged(auth, (user) => {
-    console.log("Inside user check")
     if(user) {
     onSnapshot(q, (snapshot) => {
         todos = []
@@ -233,8 +224,6 @@ onAuthStateChanged(auth, (user) => {
                 userid: item.data().userid
             })
         })
-        console.log("Pushing todos: ", todos)
-        console.log(user.uid)
         userId = user.uid
         getUserAccount(userId) // Get the account info. Add more info in the future.
         closeUserLogin()
@@ -254,7 +243,6 @@ document.querySelector('.todo-app')!.classList.add('hide')
 
 // Render user settings
 const userSettings = () => {
-    console.log("Renderar du?")
     document.querySelector('.user-settings')!.innerHTML = `
         <div class="logged-user">
             <span class="material-symbols-outlined">person</span>
@@ -275,10 +263,6 @@ const userSettings = () => {
 
 // Render todos
 const renderTodos = () => {
-    console.log("Render todos")
-    console.log("Render Todos user (current user): ", auth.currentUser)
-    console.log("Check user: ", userName)
-    console.log("Reading Todos: ", todos)
     document.querySelector('#uid')!.setAttribute('value', userId)
     todoList.innerHTML = todos.filter(item => !item.completed && item.userid === userId).map(item => {
         return `<div class="listitem ongoing" data-title="${item.todo}" data-category="${item.category}" data-itemid="${item.id}">
@@ -321,20 +305,23 @@ const completedRender = () => {
 
 // Add todos
 const todoForm = document.querySelector('#addtodo') as HTMLFormElement
-todoForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    addDoc(colRef, {
-        todo: todoForm.addtask.value,
-        category: todoForm.taskcategory.value,
-        completed: false,
-        created: serverTimestamp(),
-        userid: todoForm.uid.value
-    })
-    .then(() => {
-        searchForm.reset()
-        todoForm.reset()
-    })
+todoForm.addEventListener('submit',
+    (e) => {
+        e.preventDefault();
+        addDoc(colRef, {
+            todo: todoForm.addtask.value,
+            category: todoForm.taskcategory.value,
+            completed: false,
+            created: serverTimestamp(),
+            userid: todoForm.uid.value
+        }).then(() => {
+            searchForm.reset()
+            todoForm.reset()
+        }).catch(err => {
+            console.log(err.message)
+        })
 })
+
 
 // Edit todos
 todoList.addEventListener('click', (e) => {
@@ -389,8 +376,7 @@ todoList.addEventListener('submit', (e) => {
             category: target.taskcategoryedit.value
         })
             .then(() =>
-                //renderTodos()
-                console.log("#### Todo is updated ####")
+                console.log("Update complete")
             )
     }
 })
@@ -408,7 +394,7 @@ todoList.addEventListener('click', (e) => {
         })
         .then(() =>
             //renderTodos()
-            console.log("Todo deleted")
+            console.log("Deleted")
         )
     }
 })
@@ -429,8 +415,6 @@ const deleteMsg = (targetId:any) => {
     getDoc(docRef)
         .then(docItem => {
             docData = docItem.data()
-            //deleteBox.classList.remove('hide')
-            //darkBg.classList.remove('hide')
             togglePopup()
             popUpContainer.innerHTML = `
             <div class="delete-box">
@@ -447,7 +431,7 @@ const deleteMsg = (targetId:any) => {
         })
 }
 
-// Delete check
+// Delete check and Logout check
 popUpContainer.addEventListener('click', (e:any) => {
     const target = e.target as HTMLElement
     if(target.tagName === 'BUTTON' && target.dataset.action) {
@@ -457,6 +441,8 @@ popUpContainer.addEventListener('click', (e:any) => {
             renderTodos()
         } else if(target.dataset.action === 'delete' && target.dataset.id) {
             deleteTodos(target.dataset.id)
+        } else if(target.dataset.action === 'logout') {
+            logoutUser()
         }
     }
 })
@@ -466,15 +452,13 @@ const deleteTodos = (targetId:string) => {
     const docRef = doc(db, 'todos', targetId)
     deleteDoc(docRef)
         .then(() =>
-            //renderTodos()
-            console.log("Todo deleted, right?")
+            console.log("Delete completed")
         )
 }
 
 // Set the todolist based on user
 let userTodos: any [] = []
 const setTodo = (userId: any) => {
-    console.log("Sets the TODO")
     userTodos = todos.filter(item => userId.includes(item.userid))
 }
 

@@ -13,7 +13,5 @@ export const closeUserLogin = () => {
     const todoAppEl = document.querySelector('.todo-app')! as HTMLDivElement
     if(todoAppEl.classList.contains('hide')) {
         todoAppEl.classList.remove('hide')
-    } else {
-        console.log("NOTHING TO HIDE")
     }
 }
