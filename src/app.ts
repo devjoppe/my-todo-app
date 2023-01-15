@@ -208,6 +208,30 @@ const logoutUser = () => {
         })
 }
 
+// User settings Panel
+const settingsPanelEl = document.querySelector('.settings-panel') as HTMLDivElement
+const settingsPanel = () => {
+    settingsPanelEl.classList.toggle('hide')
+    settingsPanelEl.innerHTML = `
+        <div class="settings-close">
+        Close settings<span class="material-symbols-outlined close-settings">cancel</span>
+        </div>
+        <div class="settings-category">
+            <h3>User settings</h3>
+            <div class="settings-item">
+                Remove my user and all data
+            </div>
+            <div class="settings-item">
+                Change my user name
+            </div>
+        </div>
+    `
+    document.querySelector('.settings-close')!.addEventListener('click', () => {
+        settingsPanelEl.classList.toggle('hide')
+        settingsPanelEl.innerHTML = ``
+    })
+}
+
 // Fetch/update data from Firebase realtime
 // And Check if the user is signed in.
 onAuthStateChanged(auth, (user) => {
@@ -252,12 +276,15 @@ const userSettings = () => {
             </div>
         </div>
         <div class="settings">
-            <span class="material-symbols-outlined">settings</span>
+            <span class="material-symbols-outlined toggle-settings">settings</span>
             <span class="material-symbols-outlined logout">logout</span>
         </div>
     `
     document.querySelector('.logout')!.addEventListener('click', () => {
         logoutCheck()
+    })
+    document.querySelector('.toggle-settings')!.addEventListener('click', () => {
+        settingsPanel()
     })
 }
 

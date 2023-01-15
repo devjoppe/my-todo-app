@@ -1,80 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My todo | created by Joakim Ottosson</title>
-  <!-- Google icons -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My todo | created by Joakim Ottosson</title>
+    <!-- Google icons -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
 </head>
 <body>
 
 <div class="container-center">
-  <!-- Start: User input -->
-  <div class="user-app f-direction-column">
-    <h1 class="user-welcome">My Todo</h1>
-    <p>Welcome to My Todo, a personal project and <a href="https://www.github.com/devjoppe/my-todo-app" target="_blank">demo app</a> that I, <a href="https://www.jotto.dev" target="_blank">Joakim</a>, designed and developed as a learning exercise. This app allows you to keep track of tasks and to-do items.</p>
-    <h2 class="testit">Using the app</h2>
-    <p>To test the app, you can either log in with the demo account, or create your own personal account.</p>
-    <div class="default-box">
-      <h3>Demo account</h3>
-      <p>✉️ demo@demo.com</p>
-      <p>🔑 demo123</p>
-    </div>
-    <div id="loginform" class="loginform">
-      <!-- Login form -->
-    </div>
-    <p><strong>or..</strong></p>
-    <span class="createuser">Create new user 👍</span>
-    <div class="info-box">
-      <a href="https://www.github.com/devjoppe" target="_blank">Visit my GitHub for more projects.</a>
-    </div>
-  </div>
-  <!-- End: User input -->
-  <!-- Start: Dark Pop-ups -->
-  <div class="existing-container hide">
-    <!-- Create new user popup -->
-    <!-- Delete message popup -->
-  </div>
-  <!-- End: Dark Pop-ups -->
-  <!-- Start: todoApp -->
-  <div class="todo-app hide">
-    <div class="user-settings">
-      <!-- User settings -->
-    </div>
-    <div class="inner-content">
-      <!-- Search form -->
-      <form id="search">
-        <label for="search-field"></label>
-        <input id="search-field" class="search" type="text" name="searchfield" placeholder="Filter">
-      </form>
-      <h2>Upcoming tasks &#x1F4C3;</h2>
-      <div id="todolist" class="todolist">
-        <!-- List with ongoing tasks -->
-      </div>
-      <span id="nofilter" class="hide">Your filter did not return any matches. &#128556;</span>
-      <form id="addtodo">
-        <div class="addnewtask">
-          <label for="category"></label>
-          <select class="addcategory" id="category" name="taskcategory">
-            <option value="none">None</option>
-            <option value="private">Private</option>
-            <option value="work">Work</option>
-          </select>
-          <label for="addtask"></label>
-          <input id="addtask" class="addtask" type="text" name="addtask" placeholder="New task" required>
-          <input type="hidden" id="uid" name="uid" value="">
+    <!-- Start: User input -->
+    <div class="user-app f-direction-column">
+        <h1 class="user-welcome">My Todo</h1>
+        <p>Welcome to My Todo, a personal project and <a href="https://www.github.com/devjoppe/my-todo-app"
+                                                         target="_blank">demo app</a> that I, <a
+                href="https://www.jotto.dev" target="_blank">Joakim</a>, designed and developed as a learning exercise.
+            This app allows you to keep track of tasks and to-do items.</p>
+        <h2 class="testit">Using the app</h2>
+        <p>To test the app, you can either log in with the demo account, or create your own personal account.</p>
+        <div class="default-box">
+            <h3>Demo account</h3>
+            <p>✉️ demo@demo.com</p>
+            <p>🔑 demo123</p>
         </div>
-        <button id="newtask-button" type="submit" class="resp-button">Add</button>
-      </form>
-      <h2>Completed &#x1F44D;</h2>
-      <div id="completedlist" class="completedlist">
-        <!-- List with completed -->
-      </div>
+        <div id="loginform" class="loginform">
+            <!-- Login form -->
+        </div>
+        <p><strong>or..</strong></p>
+        <span class="createuser">Create new user 👍</span>
+        <div class="info-box">
+            <a href="https://www.github.com/devjoppe" target="_blank">Visit my GitHub for more projects.</a>
+        </div>
     </div>
-  </div>
-  <!-- End: todoApp -->
+    <!-- End: User input -->
+    <!-- Start: Dark Pop-ups -->
+    <div class="existing-container hide">
+        <!-- Create new user popup -->
+        <!-- Delete message popup -->
+    </div>
+    <!-- End: Dark Pop-ups -->
+    <!-- Start: todoApp -->
+    <div class="todo-app hide">
+        <div class="user-settings">
+            <!-- User settings -->
+        </div>
+        <div class="settings-panel hide">
+            <!-- settings panel Open/Close -->
+        </div>
+        <div class="inner-content">
+            <!-- Search form -->
+            <form id="search">
+                <label for="search-field"></label>
+                <input id="search-field" class="search" type="text" name="searchfield" placeholder="Filter">
+            </form>
+            <h2>Upcoming tasks &#x1F4C3;</h2>
+            <div id="todolist" class="todolist">
+                <!-- List with ongoing tasks -->
+            </div>
+            <span id="nofilter" class="hide">Your filter did not return any matches. &#128556;</span>
+            <form id="addtodo">
+                <div class="addnewtask">
+                    <label for="category"></label>
+                    <select class="addcategory" id="category" name="taskcategory">
+                        <option value="none">None</option>
+                        <option value="private">Private</option>
+                        <option value="work">Work</option>
+                    </select>
+                    <label for="addtask"></label>
+                    <input id="addtask" class="addtask" type="text" name="addtask" placeholder="New task" required>
+                    <input type="hidden" id="uid" name="uid" value="">
+                </div>
+                <button id="newtask-button" type="submit" class="resp-button">Add</button>
+            </form>
+            <h2>Completed &#x1F44D;</h2>
+            <div id="completedlist" class="completedlist">
+                <!-- List with completed -->
+            </div>
+        </div>
+    </div>
+    <!-- End: todoApp -->
 </div>
 <script type="module" src="src/app.ts"></script>
 </body>
