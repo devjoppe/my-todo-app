@@ -218,10 +218,10 @@ const settingsPanel = () => {
         </div>
         <div class="settings-category">
             <h3>User settings</h3>
-            <div class="settings-item">
+            <div class="settings-item" data-action="deleteUser">
                 Remove my user and all data
             </div>
-            <div class="settings-item">
+            <div class="settings-item" data-action="changeName">
                 Change my user name
             </div>
         </div>
@@ -229,6 +229,13 @@ const settingsPanel = () => {
     document.querySelector('.settings-close')!.addEventListener('click', () => {
         settingsPanelEl.classList.toggle('hide')
         settingsPanelEl.innerHTML = ``
+    })
+    // Actions from the User settings tab
+    settingsPanelEl.addEventListener('click', (e) => {
+        let target:any = e.target as HTMLDivElement
+        if(target.dataset.action === 'deleteUser') {
+            deleteUserData()
+        }
     })
 }
 
@@ -421,7 +428,7 @@ todoList.addEventListener('click', (e) => {
         })
         .then(() =>
             //renderTodos()
-            console.log("Deleted")
+            console.log("Todo Done")
         )
     }
 })
@@ -533,6 +540,54 @@ const resetHide = () => {
     let listItems = document.querySelectorAll('.listitem')!
     listItems.forEach(item => {
         item.classList.remove('hide')
+    })
+}
+
+// Deleting user with data, and account
+const deleteUserData = () => {
+    console.log(userId)
+    let docQuery = query(colRef, where('userid', '==', userId))
+    let userQuery = query(userRef, where('userid', '==', userId))
+    console.log(userQuery)
+    getDocs(docQuery)
+        .then(docItem => {
+            docItem.forEach(docId => {
+                const docRef = doc(db, 'todos', docId.id)
+                deleteDoc(docRef)
+                    .then(() => {
+                        console.log("Todos deleted")
+                    })
+               })
+        })
+        .catch(err => {
+            console.log(err.message)
+        })
+    getDocs(userQuery)
+        .then(userItem => {
+            userItem.forEach(docId => {
+                console.log("Checking if it goes to the loop")
+                console.log(docId.id)
+                const userRef = doc(db, 'user', docId.id)
+                deleteDoc(userRef)
+                    .then(()=> {
+                        console.log("User data deleted")
+                    })
+                })
+        })
+        .catch(err => {
+            console.log(err.message)
+        })
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            user.delete()
+                .then(()=> {
+                    console.log("User account, ALL DELETED")
+                    //location.reload()
+                })
+                .catch(err => {
+                    console.log(err.message)
+                })
+            }
     })
 }
 
